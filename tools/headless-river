@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# Test the desktop in a throwaway, invisible river session, without touching
+# the live one. Uses this repo's *built* configuration (not the applied one).
+#
+#   tools/headless-river start [OUTPUTS] [RENDERER]  OUTPUTS=2, RENDERER=pixman|gles2
+#   tools/headless-river run CMD [ARGS...]           run inside the session
+#   tools/headless-river shot FILE [OUTPUT]          screenshot (PNG)
+#   tools/headless-river stop                        kill only this session
+#
+# Outputs are HEADLESS-1, HEADLESS-2... placed left to right at 1920x1080.
+# The real river init runs in reload mode (settings, keys, rules), then
+# rivercarro starts; session programs (mako, foot server...) do not, start what
+# you need with `run`. Use RENDERER=gles2 for screenshots of translucent
+# windows: pixman renders them wrongly.
+set -euo pipefail
+
+state="/tmp/headless-river-$(id -u)" # short: Wayland socket paths max ~100 chars
+runtime="$state/run"
+repo="$(cd "$(dirname "$0")/.." && pwd)"
+
+session_env() {
+  # shellcheck disable=SC1091
+  source "$state/env"
+  export HOME PATH XDG_CONFIG_HOME XDG_DATA_DIRS LANG=C.UTF-8 XDG_RUNTIME_DIR="$runtime" WAYLAND_DISPLAY=wayland-1
+}
+
+case "${1:-}" in
+  start)
+    outputs="${2:-2}" renderer="${3:-pixman}"
+    [ -e "$state/pid" ] && { echo "already running; run '$0 stop' first" >&2; exit 1; }
+    mkdir -p "$runtime" && chmod 700 "$runtime"
+
+    host="$(nix eval --raw -f "$repo/settings.nix" hostname)"
+    user="$(nix eval --raw -f "$repo/settings.nix" user.name)"
+    cfg="$repo#nixosConfigurations.$host"
+    build() { nix build "$@" --no-link --print-out-paths | grep -v -- '-man$' | head -1; }
+    home_path="$(build "$cfg.config.home-manager.users.$user.home.path")"
+    home_files="$(build "$cfg.config.home-manager.users.$user.home-files")"
+    river="$(build "$cfg.pkgs.river-classic")"
+    wlr_randr="$(build "$cfg.pkgs.wlr-randr")"
+
+    cat >"$state/env" <<EOF
+PATH="$home_path/bin:$river/bin:$wlr_randr/bin:/run/current-system/sw/bin"
+XDG_CONFIG_HOME="$home_files/.config"
+XDG_DATA_DIRS="$home_path/share:/run/current-system/sw/share"
+EOF
+    cat >"$state/init" <<EOF
+#!/bin/sh
+RIVER_RELOAD=1 "$home_files/.config/river/init"
+x=0
+for i in \$(seq 1 $outputs); do
+  wlr-randr --output HEADLESS-\$i --custom-mode 1920x1080 --pos \$x,0
+  x=\$((x + 1920))
+done
+rivercarro &
+EOF
+    chmod +x "$state/init"
+
+    (
+      session_env
+      unset WAYLAND_DISPLAY
+      export WLR_BACKENDS=headless WLR_RENDERER="$renderer" WLR_LIBINPUT_NO_DEVICES=1 \
+        WLR_HEADLESS_OUTPUTS="$outputs"
+      exec river -c "$state/init" >"$state/river.log" 2>&1
+    ) &
+    echo $! >"$state/pid"
+    for _ in $(seq 50); do [ -S "$runtime/wayland-1" ] && break; sleep 0.1; done
+    sleep 1
+    echo "started (log: $state/river.log)"
+    ;;
+  run)
+    shift
+    session_env
+    exec "$@"
+    ;;
+  shot)
+    session_env
+    exec grim ${3:+-o "$3"} "$2"
+    ;;
+  stop)
+    # Every process of ours whose environment points at this runtime dir
+    for env in /proc/[0-9]*/environ; do
+      pid="${env#/proc/}" pid="${pid%/environ}"
+      [ -O "$env" ] || continue
+      if grep -qzx "XDG_RUNTIME_DIR=$runtime" "$env" 2>/dev/null; then
+        kill "$pid" 2>/dev/null || true
+      fi
+    done
+    rm -rf "$state"
+    echo stopped
+    ;;
+  *)
+    sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'
+    exit 1
+    ;;
+esac

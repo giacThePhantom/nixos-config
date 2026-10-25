@@ -1,0 +1,16 @@
+// Power: five large buttons
+.power-btn {
+  padding: 16px 8px;
+  min-width: 78px;
+  border-radius: 16px;
+  background-color: $glass;
+  border: 1px solid $glass-border;
+  &:hover { background-color: $glass-hover; box-shadow: $glow; }
+}
+.power-icon { font-size: 26px; }
+.power-name { font-size: 12px; color: $textMutedStrong; }
+.lock .power-icon { color: $infoText; }
+.suspend .power-icon { color: $successText; }
+.logout .power-icon { color: $warningText; }
+.reboot .power-icon { color: $warning; }
+.shutdown .power-icon { color: $danger; }

@@ -1,0 +1,17 @@
+;; Power (Super+Shift+E): lock, suspend, log out, reboot, shut down.
+
+(defwidget power-panel []
+  (card :title "Power" :key "E"
+    (hero :value host :detail "up ${uptime}")
+    (box :class "power" :spacing 10
+      (power-btn :icon "󰌾" :name "Lock" :cls "lock" :cmd "dash close; loginctl lock-session")
+      (power-btn :icon "󰒲" :name "Suspend" :cls "suspend" :cmd "dash close; systemctl suspend")
+      (power-btn :icon "󰍃" :name "Log out" :cls "logout" :cmd "riverctl exit")
+      (power-btn :icon "󰜉" :name "Reboot" :cls "reboot" :cmd "systemctl reboot")
+      (power-btn :icon "󰐥" :name "Shut down" :cls "shutdown" :cmd "systemctl poweroff"))))
+
+(defwidget power-btn [icon name cls cmd]
+  (button :class "power-btn ${cls}" :onclick cmd
+    (box :orientation "v" :space-evenly false :spacing 8
+      (label :class "power-icon" :text icon)
+      (label :class "power-name" :text name))))

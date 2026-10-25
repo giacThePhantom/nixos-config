@@ -1,0 +1,16 @@
+;; The menu (Super+A): pick a panel by clicking or by its letter.
+
+(defwidget hub-panel []
+  (card :title "Dashboard" :key "Esc closes"
+    (box :class "hub" :spacing 12
+      (hub-tile :icon "󰃭" :name "Calendar" :key "C" :target "calendar")
+      (hub-tile :icon "󰎆" :name "Media" :key "S" :target "media")
+      (hub-tile :icon "󰍛" :name "System" :key "I" :target "system")
+      (hub-tile :icon "󰐥" :name "Power" :key "E" :target "power"))))
+
+(defwidget hub-tile [icon name key target]
+  (button :class "tile" :onclick "dash open ${target}"
+    (box :orientation "v" :space-evenly false :spacing 8
+      (label :class "tile-icon" :text icon)
+      (label :class "tile-name" :text name)
+      (label :class "tile-key" :text key))))

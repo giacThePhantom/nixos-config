@@ -1,0 +1,46 @@
+;; Media (Super+S): what's playing (from `dash-media`) and the audio devices.
+
+(defpoll media :interval "1s" :run-while {panel == "media"}
+  :initial '{"status":"Stopped","title":"","artist":"","album":"","art":"","progress":0,"pos":"","len":""}'
+  `dash-media`)
+(defpoll volume :interval "1s" :run-while {panel == "media"} :initial "0"
+  `wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | awk '{print int($2*100)} END {if (NR == 0) print 0}'`)
+(defpoll muted :interval "1s" :run-while {panel == "media"} :initial "false"
+  `wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | grep -q MUTED && echo true || echo false`)
+(defpoll mic_muted :interval "1s" :run-while {panel == "media"} :initial "false"
+  `wpctl get-volume @DEFAULT_AUDIO_SOURCE@ 2>/dev/null | grep -q MUTED && echo true || echo false`)
+(defpoll output :interval "5s" :run-while {panel == "media"} :initial ""
+  `wpctl inspect @DEFAULT_AUDIO_SINK@ 2>/dev/null | sed -n 's/.*node.description = "\(.*\)"/\1/p'`)
+
+(defwidget media-panel []
+  (card :title "Media" :key "S"
+    (box :class "now" :space-evenly false :spacing 18
+      (box :class "cover" :width 112 :height 112
+        :style {media.art == "" ? "" : "background-image: url('${media.art}');"}
+        (label :class "cover-icon" :visible {media.art == ""} :text "󰎆"))
+      (box :orientation "v" :space-evenly false :valign "center" :hexpand true
+        (hero :value {media.title == "" ? "Nothing playing" : media.title} :detail {media.artist})
+        (label :class "muted" :halign "start" :limit-width 34 :text {media.album})))
+    (box :orientation "v" :space-evenly false :spacing 4 :visible {media.len != ""}
+      (scale :class "progress" :min 0 :max 101 :value {media.progress} :active false)
+      (box
+        (label :class "muted" :halign "start" :text {media.pos})
+        (label :class "muted" :halign "end" :text {media.len})))
+    (box :class "media-btns" :halign "center" :spacing 22
+      (button :onclick "playerctl previous" "󰒮")
+      (button :class "play" :onclick "playerctl play-pause"
+        {media.status == "Playing" ? "󰏤" : "󰐊"})
+      (button :onclick "playerctl next" "󰒭"))
+    (section :text "OUTPUT")
+    (box :space-evenly false :spacing 12
+      (button :class "icon-btn ${muted ? 'off' : ''}" :onclick "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        {muted ? "󰝟" : "󰕾"})
+      (scale :class "volume" :hexpand true :min 0 :max 101 :value volume
+        :onchange "wpctl set-volume @DEFAULT_AUDIO_SINK@ {}%")
+      (label :class "value" :text "${volume}%"))
+    (label :class "muted" :halign "start" :limit-width 44 :text output)
+    (box :class "actions" :space-evenly false :spacing 8
+      (button :class "action ${mic_muted ? 'off' : ''}" :onclick "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+        {mic_muted ? "󰍭  Microphone off" : "󰍬  Microphone on"})
+      (box :hexpand true)
+      (button :class "action" :onclick "dash-run pwvucontrol" "󰒓  Mixer"))))

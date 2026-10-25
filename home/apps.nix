@@ -1,7 +1,7 @@
 # Lightweight GUI apps and file associations.
-{ ... }:
+{ colors, fonts, ... }:
 let
-  c = import ./palette.nix;
+  c = colors;
 in
 {
   programs.mpv = {
@@ -11,27 +11,30 @@ in
       vo = "gpu-next";
       profile = "high-quality";
       keep-open = "yes";
+      # On-screen display (seek bar, volume...) in the palette
+      osd-color = "#${c.text}";
+      osd-border-color = "#${c.bg}";
     };
   };
 
   programs.imv = {
     enable = true;
-    settings.options.background = c.base;
+    settings.options.background = c.bg;
   };
 
   programs.zathura = {
     enable = true;
     options = {
-      font = "${c.uiFont} 11";
+      font = "${fonts.ui} 11";
       recolor = true;
       selection-clipboard = "clipboard";
-      default-bg = "#${c.base}";
+      default-bg = "#${c.bg}";
       default-fg = "#${c.text}";
-      statusbar-bg = "#${c.mantle}";
+      statusbar-bg = "#${c.bgCard}";
       statusbar-fg = "#${c.text}";
-      inputbar-bg = "#${c.mantle}";
+      inputbar-bg = "#${c.bgCard}";
       inputbar-fg = "#${c.text}";
-      recolor-lightcolor = "#${c.base}";
+      recolor-lightcolor = "#${c.bg}";
       recolor-darkcolor = "#${c.text}";
       highlight-color = "rgba(139,92,246,0.4)"; # --accent-glow
       highlight-active-color = "rgba(167,139,250,0.5)"; # --accent-light
@@ -47,6 +50,7 @@ in
     mimeApps = {
       enable = true;
       defaultApplications = {
+        "x-scheme-handler/rencal" = "renCal.desktop"; # calendar panel event links
         "application/pdf" = "org.pwmt.zathura.desktop";
         "image/png" = "imv.desktop";
         "image/jpeg" = "imv.desktop";

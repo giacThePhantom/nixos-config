@@ -1,0 +1,15 @@
+// System: rings and detail rows
+.ring {
+  min-width: 84px;
+  min-height: 84px;
+  background-color: $bgTertiary;
+}
+.ring-icon { font-size: 26px; }
+.ring-label { color: $textMutedStrong; font-size: 12px; }
+.cpu { color: $success; .ring-icon { color: $success; } }
+.ram { color: $warningText; .ring-icon { color: $warningText; } }
+.disk { color: $info; .ring-icon { color: $info; } }
+
+.row { padding: 2px 0; }
+.row-name { color: $textMuted; }
+.row-value { color: $textSecondary; }

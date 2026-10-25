@@ -1,15 +1,20 @@
 # Launcher, notifications and lock screen config. The daemons themselves are
 # started from the river init (see river.nix).
-{ pkgs, ... }:
+{
+  pkgs,
+  colors,
+  fonts,
+  ...
+}:
 let
-  c = import ./palette.nix;
+  c = colors;
 in
 {
   programs.fuzzel = {
     enable = true;
     settings = {
       main = {
-        font = "${c.uiFont}:size=12";
+        font = "${fonts.ui}:size=12,${fonts.icons}:size=12";
         terminal = "footclient";
         icon-theme = "Papirus-Dark";
         prompt = "'󰍉  '";
@@ -21,16 +26,16 @@ in
         layer = "overlay";
       };
       colors = {
-        background = "${c.base}f2";
+        background = "${c.bg}f2";
         text = "${c.text}ff";
-        prompt = "${c.subtext1}ff";
-        placeholder = "${c.overlay1}ff";
+        prompt = "${c.textSecondary}ff";
+        placeholder = "${c.textMuted}ff";
         input = "${c.text}ff";
-        match = "${c.mauve}ff";
-        selection = "${c.surface1}ff";
+        match = "${c.accent}ff";
+        selection = "${c.bgSecondary}ff";
         selection-text = "${c.text}ff";
-        selection-match = "${c.mauve}ff";
-        border = "${c.mauve}ff";
+        selection-match = "${c.accent}ff";
+        border = "${c.accent}ff";
       };
       border = {
         width = 2;
@@ -42,11 +47,11 @@ in
   services.mako = {
     enable = true;
     settings = {
-      font = "${c.uiFont} 11";
-      background-color = "#${c.base}";
+      font = "${fonts.ui} 11";
+      background-color = "#${c.bg}";
       text-color = "#${c.text}";
-      border-color = "#${c.mauve}";
-      progress-color = "over #${c.surface0}";
+      border-color = "#${c.accent}";
+      progress-color = "over #${c.bgTertiary}";
       border-size = 2;
       border-radius = 10;
       padding = "12";
@@ -56,7 +61,7 @@ in
       icons = true;
       max-icon-size = 48;
       "urgency=high" = {
-        border-color = "#${c.peach}";
+        border-color = "#${c.warning}";
         default-timeout = 0;
       };
     };
@@ -65,23 +70,23 @@ in
   programs.swaylock = {
     enable = true;
     settings = {
-      image = "${import ./wallpaper.nix { inherit pkgs; }}";
+      image = "${import ./theme/wallpaper.nix { inherit pkgs colors; }}";
       scaling = "fill";
-      font = c.font;
+      font = fonts.mono;
       indicator-radius = 90;
       indicator-thickness = 8;
       show-failed-attempts = true;
-      color = c.base;
-      inside-color = "${c.base}cc";
-      inside-clear-color = "${c.base}cc";
-      inside-ver-color = "${c.base}cc";
-      inside-wrong-color = "${c.base}cc";
-      ring-color = c.surface1;
-      ring-clear-color = c.yellow;
-      ring-ver-color = c.blue;
-      ring-wrong-color = c.red;
-      key-hl-color = c.mauve;
-      bs-hl-color = c.maroon;
+      color = c.bg;
+      inside-color = "${c.bg}cc";
+      inside-clear-color = "${c.bg}cc";
+      inside-ver-color = "${c.bg}cc";
+      inside-wrong-color = "${c.bg}cc";
+      ring-color = c.bgSecondary;
+      ring-clear-color = c.warningText;
+      ring-ver-color = c.infoText;
+      ring-wrong-color = c.danger;
+      key-hl-color = c.accent;
+      bs-hl-color = c.dangerText;
       line-color = "00000000";
       line-clear-color = "00000000";
       line-ver-color = "00000000";
@@ -90,7 +95,7 @@ in
       text-color = c.text;
       text-clear-color = c.text;
       text-ver-color = c.text;
-      text-wrong-color = c.red;
+      text-wrong-color = c.danger;
     };
   };
 

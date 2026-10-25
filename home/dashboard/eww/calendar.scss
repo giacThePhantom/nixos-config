@@ -1,0 +1,28 @@
+// Calendar: month grid and renCal agenda
+.month { padding: 4px; }
+calendar {
+  padding: 4px;
+  color: $textSecondary;
+  &.header { color: $accentLight; font-weight: bold; }
+  &.button { color: $textMuted; }
+  &.highlight { color: $textMuted; font-weight: bold; }
+  &:indeterminate { color: $textPlaceholder; }
+  &:selected { color: $text; background-color: $accent; border-radius: 8px; }
+}
+
+.agenda { min-width: 300px; }
+.day { font-size: 12px; font-weight: bold; color: $gradientStart; }
+.event {
+  padding: 6px 8px;
+  border-radius: 10px;
+  &:hover { background-color: $glass-hover; }
+}
+.event-bar { border-radius: 2px; min-height: 34px; }
+.event-title { font-size: 14px; }
+.event-time { font-size: 12px; color: $textMuted; }
+
+// One colour per calendar, in the order caldir lists them
+.cal-0 { background-color: $accent; }
+.cal-1 { background-color: $info; }
+.cal-2 { background-color: $success; }
+.cal-3 { background-color: $warning; }

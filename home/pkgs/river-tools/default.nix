@@ -2,6 +2,7 @@
 #   river-output  print the focused output's name
 #   river-try     run river commands until one changes focus
 {
+  lib,
   stdenv,
   pkg-config,
   wayland,
@@ -11,9 +12,16 @@
 stdenv.mkDerivation {
   pname = "river-tools";
   version = "0.2";
-  src = ./.;
+  # Only the sources, so editing this file doesn't rebuild the tools
+  src = lib.fileset.toSource {
+    root = ./.;
+    fileset = lib.fileset.fileFilter (f: f.hasExt "c") ./.;
+  };
 
-  nativeBuildInputs = [ pkg-config wayland-scanner ];
+  nativeBuildInputs = [
+    pkg-config
+    wayland-scanner
+  ];
   buildInputs = [ wayland ];
 
   buildPhase = ''
