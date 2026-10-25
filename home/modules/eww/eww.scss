@@ -1,0 +1,125 @@
+@import "colors";
+
+* {
+  all: unset;
+  font-family: "Inter", "JetBrainsMono Nerd Font";
+  font-size: 14px;
+  color: $text;
+}
+
+.dash {
+  background-color: rgba($base, 0.94);
+  border: 2px solid $surface0;
+  border-radius: 22px;
+  padding: 20px;
+  min-width: 760px;
+}
+
+.card {
+  background-color: $mantle;
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+
+// Header
+.clock { min-width: 300px; }
+.greet { color: $subtext0; font-size: 15px; }
+.time { font-size: 64px; font-weight: 800; color: $lavender; }
+.date { font-size: 17px; color: $mauve; margin-bottom: 10px; }
+.sub { color: $overlay1; font-size: 13px; }
+
+.cal { padding: 10px 14px; }
+calendar {
+  padding: 4px;
+  color: $subtext1;
+  &.header { color: $mauve; font-weight: bold; }
+  &.button { color: $overlay1; }
+  &.highlight { color: $overlay1; font-weight: bold; }
+  &:indeterminate { color: $surface2; }
+  &:selected { color: $crust; background-color: $mauve; border-radius: 8px; }
+}
+
+// Stats
+.stat-label { color: $subtext0; font-size: 12px; }
+.ring {
+  min-width: 76px;
+  min-height: 76px;
+  background-color: $surface0;
+}
+.ring-icon { font-size: 26px; }
+.cpu { color: $green; .ring-icon { color: $green; } }
+.ram { color: $yellow; .ring-icon { color: $yellow; } }
+.disk { color: $sapphire; .ring-icon { color: $sapphire; } }
+
+// Media
+.media-icon {
+  font-size: 30px;
+  color: $crust;
+  background-color: $pink;
+  border-radius: 12px;
+  padding: 10px 16px;
+}
+.m-title { font-weight: bold; font-size: 15px; }
+.m-artist { color: $subtext0; font-size: 13px; }
+.media-btns button {
+  padding: 4px 10px;
+  border-radius: 10px;
+  &:hover { background-color: $surface0; }
+}
+.media-btns button label { font-size: 22px; color: $subtext1; }
+.media-btns button:hover label { color: $pink; }
+.media-btns .play label { color: $pink; font-size: 28px; }
+
+// Volume / network
+.icon-btn label { font-size: 20px; color: $peach; }
+.icon-btn.muted label { color: $overlay0; }
+scale trough {
+  background-color: $surface0;
+  border-radius: 8px;
+  min-height: 8px;
+  min-width: 260px;
+}
+scale highlight { background-color: $peach; border-radius: 8px; }
+scale slider {
+  background-color: $text;
+  border-radius: 50%;
+  min-width: 16px;
+  min-height: 16px;
+  margin: -4px 0;
+}
+.vol-label { color: $subtext0; min-width: 40px; }
+.net { color: $sapphire; margin-left: 10px; }
+
+// Apps
+.app {
+  padding: 12px 6px;
+  border-radius: 14px;
+  min-width: 70px;
+  &:hover { background-color: $surface0; }
+  &:hover .app-icon { color: $mauve; }
+}
+.app-icon { font-size: 26px; color: $blue; }
+.app-name { font-size: 12px; color: $subtext0; }
+
+// Power
+.pbtn label { font-size: 22px; }
+.pbtn {
+  padding: 10px 22px;
+  border-radius: 14px;
+  background-color: $mantle;
+  &:hover { background-color: $surface0; }
+}
+.lock label { color: $blue; }
+.suspend label { color: $teal; }
+.logout label { color: $yellow; }
+.reboot label { color: $peach; }
+.shutdown label { color: $red; }
+
+.hint { color: $overlay0; font-size: 11px; }
+
+tooltip {
+  background-color: $crust;
+  border: 1px solid $surface1;
+  border-radius: 8px;
+  padding: 4px 8px;
+}

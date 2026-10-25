@@ -1,0 +1,120 @@
+;; Dashboard, toggled with Super+A (`dash toggle`).
+;; Every poll is gated on dash_open, so nothing runs while it's hidden.
+
+(defvar dash_open false)
+
+(defpoll time :interval "1s" :run-while dash_open :initial "" `date +%H:%M`)
+(defpoll date :interval "60s" :run-while dash_open :initial "" `date '+%A, %d %B'`)
+(defpoll uptime :interval "60s" :run-while dash_open :initial ""
+  `uptime | sed -E 's/.*up +//; s/, +[0-9]+ user.*//; s/  +/ /g'`)
+(defpoll host :interval "1h" :run-while dash_open :initial "" `cat /proc/sys/kernel/hostname`)
+
+(defpoll volume :interval "1s" :run-while dash_open :initial "0"
+  `wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | awk '{print int($2*100)} END {if (NR == 0) print 0}'`)
+(defpoll muted :interval "1s" :run-while dash_open :initial "false"
+  `wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q MUTED && echo true || echo false`)
+(defpoll net :interval "5s" :run-while dash_open :initial ""
+  `nmcli -t -f NAME connection show --active 2>/dev/null | grep -v '^lo$' | head -1`)
+
+(defpoll m_title :interval "1s" :run-while dash_open :initial ""
+  `playerctl metadata title 2>/dev/null || echo "Nothing playing"`)
+(defpoll m_artist :interval "1s" :run-while dash_open :initial ""
+  `playerctl metadata artist 2>/dev/null || true`)
+(defpoll m_status :interval "1s" :run-while dash_open :initial "Stopped"
+  `playerctl status 2>/dev/null || echo Stopped`)
+
+(defwindow dashboard
+  :monitor 0
+  :geometry (geometry :anchor "center")
+  :stacking "overlay"
+  :exclusive false
+  :focusable "none"
+  :namespace "eww-dashboard"
+  (dashboard))
+
+(defwidget dashboard []
+  (box :class "dash" :orientation "v" :space-evenly false :spacing 14
+    (box :space-evenly false :spacing 14
+      (clock-card)
+      (box :class "card cal" (calendar :show-details false)))
+    (box :space-evenly false :spacing 14
+      (stats-card)
+      (media-card))
+    (controls-card)
+    (apps-card)
+    (power-row)
+    (label :class "hint"
+      :text "Super+A dashboard  ·  Super+D apps  ·  Super+Return terminal  ·  Esc close")))
+
+(defwidget clock-card []
+  (box :class "card clock" :orientation "v" :space-evenly false :hexpand true
+    (label :class "greet" :halign "start" :text "Hi, ${get_env("USER")}")
+    (label :class "time" :halign "start" :text time)
+    (label :class "date" :halign "start" :text date)
+    (box :vexpand true)
+    (label :class "sub" :halign "start" :text "󰅐  up ${uptime}")
+    (label :class "sub" :halign "start" :text "󱄅  ${host}")))
+
+(defwidget stat [value icon name cls]
+  (box :class "stat" :orientation "v" :space-evenly false :spacing 8
+    (circular-progress :class "ring ${cls}" :value value :thickness 7 :start-at 75 :clockwise true
+      :width 76 :height 76
+      (label :class "ring-icon" :text icon))
+    (label :class "stat-label" :text "${name} ${round(value, 0)}%")))
+
+(defwidget stats-card []
+  (box :class "card stats" :spacing 18
+    (stat :value {EWW_CPU.avg} :icon "󰻠" :name "CPU" :cls "cpu")
+    (stat :value {EWW_RAM.used_mem_perc} :icon "󰍛" :name "RAM" :cls "ram")
+    (stat :value {EWW_DISK["/"].used_perc} :icon "󰋊" :name "Disk" :cls "disk")))
+
+(defwidget media-card []
+  (box :class "card media" :orientation "v" :space-evenly false :hexpand true :spacing 6
+    (box :space-evenly false :spacing 12
+      (label :class "media-icon" :text "󰎆")
+      (box :orientation "v" :space-evenly false :valign "center"
+        (label :class "m-title" :halign "start" :limit-width 26 :text m_title)
+        (label :class "m-artist" :halign "start" :limit-width 30 :text m_artist)))
+    (box :vexpand true)
+    (box :class "media-btns" :halign "center" :spacing 18
+      (button :onclick "playerctl previous" "󰒮")
+      (button :class "play" :onclick "playerctl play-pause" {m_status == "Playing" ? "󰏤" : "󰐊"})
+      (button :onclick "playerctl next" "󰒭"))))
+
+(defwidget controls-card []
+  (box :class "card controls" :space-evenly false :spacing 14
+    (button :class "icon-btn ${muted ? 'muted' : ''}"
+      :onclick "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+      {muted ? "󰝟" : "󰕾"})
+    (scale :class "vol" :hexpand true :min 0 :max 101 :value volume
+      :onchange "wpctl set-volume @DEFAULT_AUDIO_SINK@ {}%")
+    (label :class "vol-label" :text "${volume}%")
+    (label :class "net" :text {net == "" ? "󰖪  offline" : "󰈀  ${net}"})))
+
+(defwidget app [icon name cmd]
+  (button :class "app" :onclick "dash-run ${cmd}" :tooltip name
+    (box :orientation "v" :space-evenly false :spacing 6
+      (label :class "app-icon" :text icon)
+      (label :class "app-name" :text name))))
+
+(defwidget apps-card []
+  (box :class "card apps" :spacing 8
+    (app :icon "󰍉" :name "Search" :cmd "fuzzel")
+    (app :icon "󰆍" :name "Terminal" :cmd "term")
+    (app :icon "󰈹" :name "Firefox" :cmd "firefox")
+    (app :icon "󰉋" :name "Files" :cmd "term yazi")
+    (app :icon "󰅩" :name "Editor" :cmd "term nvim")
+    (app :icon "󰓇" :name "Spotify" :cmd "spotify")
+    (app :icon "󰍹" :name "Monitor" :cmd "term btop")
+    (app :icon "󰕾" :name "Mixer" :cmd "pwvucontrol")))
+
+(defwidget pbtn [icon name cmd cls]
+  (button :class "pbtn ${cls}" :onclick cmd :tooltip name icon))
+
+(defwidget power-row []
+  (box :class "power" :halign "center" :spacing 12
+    (pbtn :icon "󰌾" :name "Lock" :cls "lock" :cmd "dash close; loginctl lock-session")
+    (pbtn :icon "󰤄" :name "Suspend" :cls "suspend" :cmd "dash close; systemctl suspend")
+    (pbtn :icon "󰍃" :name "Logout" :cls "logout" :cmd "riverctl exit")
+    (pbtn :icon "󰜉" :name "Reboot" :cls "reboot" :cmd "systemctl reboot")
+    (pbtn :icon "󰐥" :name "Shutdown" :cls "shutdown" :cmd "systemctl poweroff")))
