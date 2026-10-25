@@ -44,7 +44,7 @@
     (apps-card)
     (power-row)
     (label :class "hint"
-      :text "Super+A dashboard  ·  Super+D apps  ·  Super+Return terminal  ·  Esc close")))
+      :text "Super+D apps  ·  Super+HJKL focus  ·  Super+M master  ·  Super+` scratchpad  ·  Super+Shift+R reload  ·  Esc close")))
 
 (defwidget clock-card []
   (box :class "card clock" :orientation "v" :space-evenly false :hexpand true

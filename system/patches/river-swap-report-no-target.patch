@@ -1,0 +1,13 @@
+--- a/river/command/view_operations.zig	2026-10-25 15:14:34.747715805 +0100
++++ b/river/command/view_operations.zig	2026-10-25 15:14:34.757356515 +0100
+@@ -69,6 +69,10 @@
+         seat.focused.view.pending_wm_stack_link.swapWith(&target.pending_wm_stack_link);
+         seat.cursor.may_need_warp = true;
+         server.root.applyPending();
++    } else {
++        // No view in that direction: report it, so scripts can fall back
++        // (e.g. send the view to the next output instead).
++        return Error.OutOfBounds;
+     }
+ }
+ 

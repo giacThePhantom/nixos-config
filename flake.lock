@@ -1,5 +1,27 @@
 {
   "nodes": {
+    "caldir": {
+      "inputs": {
+        "nixpkgs": [
+          "rencal",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791888341,
+        "narHash": "sha256-SdoKstZaFup3U1cS5ozIS8VDiIOuiolUAezWmgJ5eYY=",
+        "owner": "t4t5",
+        "repo": "caldir",
+        "rev": "1205f1b894f36f459d66fbdd65fdf4fd2ed3cf9f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "t4t5",
+        "ref": "v0.14.8",
+        "repo": "caldir",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -36,10 +58,47 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1789006805,
+        "narHash": "sha256-xB8mKMOx1IA9vTDNLmJZ6n4wCMq/cuWBBOzGCRnqxrU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "8ce4ef6cb6f871616146b9fe26d2a5ae594e94fe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "rencal": {
+      "inputs": {
+        "caldir": "caldir",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1791890066,
+        "narHash": "sha256-m9bsfOYW3KCRT7BESBI9J26gBFiIUjK/h3YWdvW1qVQ=",
+        "owner": "t4t5",
+        "repo": "rencal",
+        "rev": "89a88510ba85aa1dfa897231b3b2bf7d13af1722",
+        "type": "github"
+      },
+      "original": {
+        "owner": "t4t5",
+        "ref": "v0.8.1",
+        "repo": "rencal",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "rencal": "rencal"
       }
     }
   },

@@ -16,26 +16,29 @@ in
       scrollback.lines = 10000;
       colors-dark = {
         alpha = "0.95";
-        foreground = c.text;
-        background = c.base;
+        # Softer than the UI: --text-secondary on the --bg-card tone (~10:1
+        # instead of 18:1). Raise towards c.text / c.base for more contrast.
+        foreground = c.subtext1;
+        background = c.mantle;
+        # regular = strong colour, bright = its lighter "-text" variant
         regular0 = c.surface1;
         regular1 = c.red;
         regular2 = c.green;
-        regular3 = c.yellow;
-        regular4 = c.blue;
-        regular5 = c.pink;
-        regular6 = c.teal;
-        regular7 = c.subtext1;
-        bright0 = c.surface2;
-        bright1 = c.red;
-        bright2 = c.green;
+        regular3 = c.peach;
+        regular4 = c.lavender;
+        regular5 = c.mauve;
+        regular6 = c.sapphire;
+        regular7 = c.subtext0;
+        bright0 = c.overlay0;
+        bright1 = c.maroon;
+        bright2 = c.teal;
         bright3 = c.yellow;
         bright4 = c.blue;
         bright5 = c.pink;
-        bright6 = c.teal;
-        bright7 = c.subtext0;
+        bright6 = c.sky;
+        bright7 = c.text;
         selection-foreground = c.text;
-        selection-background = c.surface2;
+        selection-background = c.surface1;
         urls = c.blue;
       };
     };

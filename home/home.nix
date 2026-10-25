@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
@@ -17,6 +17,13 @@
   home.packages = with pkgs; [
     spotify
     claude-code
+    # Upstream v0.8.1 ships a stale pnpm dependency hash; drop this override
+    # once a release fixes it.
+    (inputs.rencal.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+      pnpmDeps = old.pnpmDeps.overrideAttrs {
+        outputHash = "sha256-7A4skNohokIWHI4AjTZJCwWHzL8AYvf3GeqfkQjwwpU=";
+      };
+    }))
   ];
 
   home.sessionVariables = {

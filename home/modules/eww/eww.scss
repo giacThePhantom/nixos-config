@@ -7,16 +7,23 @@
   color: $text;
 }
 
+// Glass look from the web theme: gradient ground, translucent white cards
+$glass: rgba(255, 255, 255, 0.05); // --bg-card
+$glass-hover: rgba(255, 255, 255, 0.08); // --bg-glass-hover
+$glass-border: rgba(255, 255, 255, 0.08); // --border-glass
+$glow: 0 0 15px rgba(139, 92, 246, 0.4); // --accent-glow-box
+
 .dash {
-  background-color: rgba($base, 0.94);
-  border: 2px solid $surface0;
+  background-image: linear-gradient(135deg, rgba($base, 0.97), rgba($surface1, 0.97) 50%, rgba($surface0, 0.97));
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 22px;
   padding: 20px;
   min-width: 760px;
 }
 
 .card {
-  background-color: $mantle;
+  background-color: $glass;
+  border: 1px solid $glass-border;
   border-radius: 16px;
   padding: 16px 18px;
 }
@@ -24,8 +31,8 @@
 // Header
 .clock { min-width: 300px; }
 .greet { color: $subtext0; font-size: 15px; }
-.time { font-size: 64px; font-weight: 800; color: $lavender; }
-.date { font-size: 17px; color: $mauve; margin-bottom: 10px; }
+.time { font-size: 64px; font-weight: 800; color: $pink; }
+.date { font-size: 17px; color: $lavender; margin-bottom: 10px; }
 .sub { color: $overlay1; font-size: 13px; }
 
 .cal { padding: 10px 14px; }
@@ -35,8 +42,8 @@ calendar {
   &.header { color: $mauve; font-weight: bold; }
   &.button { color: $overlay1; }
   &.highlight { color: $overlay1; font-weight: bold; }
-  &:indeterminate { color: $surface2; }
-  &:selected { color: $crust; background-color: $mauve; border-radius: 8px; }
+  &:indeterminate { color: $overlay0; }
+  &:selected { color: $text; background-color: $mauve; border-radius: 8px; }
 }
 
 // Stats
@@ -64,22 +71,22 @@ calendar {
 .media-btns button {
   padding: 4px 10px;
   border-radius: 10px;
-  &:hover { background-color: $surface0; }
+  &:hover { background-color: $glass-hover; }
 }
 .media-btns button label { font-size: 22px; color: $subtext1; }
 .media-btns button:hover label { color: $pink; }
 .media-btns .play label { color: $pink; font-size: 28px; }
 
 // Volume / network
-.icon-btn label { font-size: 20px; color: $peach; }
+.icon-btn label { font-size: 20px; color: $pink; }
 .icon-btn.muted label { color: $overlay0; }
 scale trough {
-  background-color: $surface0;
+  background-color: rgba(255, 255, 255, 0.1); // --bg-progress
   border-radius: 8px;
   min-height: 8px;
   min-width: 260px;
 }
-scale highlight { background-color: $peach; border-radius: 8px; }
+scale highlight { background-color: $mauve; border-radius: 8px; }
 scale slider {
   background-color: $text;
   border-radius: 50%;
@@ -95,7 +102,7 @@ scale slider {
   padding: 12px 6px;
   border-radius: 14px;
   min-width: 70px;
-  &:hover { background-color: $surface0; }
+  &:hover { background-color: $glass-hover; box-shadow: $glow; }
   &:hover .app-icon { color: $mauve; }
 }
 .app-icon { font-size: 26px; color: $blue; }
@@ -106,8 +113,9 @@ scale slider {
 .pbtn {
   padding: 10px 22px;
   border-radius: 14px;
-  background-color: $mantle;
-  &:hover { background-color: $surface0; }
+  background-color: $glass;
+  border: 1px solid $glass-border;
+  &:hover { background-color: $glass-hover; box-shadow: $glow; }
 }
 .lock label { color: $blue; }
 .suspend label { color: $teal; }

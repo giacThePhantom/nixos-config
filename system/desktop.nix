@@ -17,6 +17,17 @@ in
     extraPackages = [ ]; # foot, swaylock etc. come from home-manager
   };
 
+  # `swap` fails when there's no view in that direction (upstream it silently
+  # does nothing), so Super+Shift+HJKL can fall back to sending the window to
+  # the neighbouring monitor.
+  nixpkgs.overlays = [
+    (final: prev: {
+      river-classic = prev.river-classic.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [ ./patches/river-swap-report-no-target.patch ];
+      });
+    })
+  ];
+
   # Boot straight into river (autologin). After logging out of river you land
   # on the tuigreet login screen instead.
   services.greetd = {

@@ -1,11 +1,44 @@
 # Small helper commands, installed on PATH so river, the dashboard and the
 # shell can all call them by name.
-{ pkgs }:
+{ pkgs, scratchTag }:
 let
   c = import ./palette.nix;
   eww = "${pkgs.eww}/bin/eww";
 in
-{
+rec {
+  # river-output, river-try (see ../pkgs/river-tools)
+  river-tools = pkgs.callPackage ../pkgs/river-tools { };
+
+  # tag focus|send|follow|toggle TAGMASK OUTPUT: tags belong to a fixed
+  # monitor, so act on that monitor (moving the window there if needed).
+  tag = pkgs.writeShellScriptBin "tag" ''
+    action=$1 tags=$2 out=$3
+    cur=$(${river-tools}/bin/river-output)
+    case $action in
+      focus)
+        riverctl focus-output "$out"
+        exec ${pkgs.river-bnf}/bin/river-bnf "$tags" ;;
+      toggle)
+        riverctl focus-output "$out"
+        riverctl toggle-focused-tags "$tags" ;;
+      send|follow)
+        if [ "$cur" != "$out" ]; then
+          # Retag while the tag is briefly shown here, so the window stays
+          # focused; send-to-output then keeps its tags.
+          riverctl toggle-focused-tags "$tags"
+          riverctl set-view-tags "$tags"
+          riverctl send-to-output "$out"
+          riverctl toggle-focused-tags "$tags"
+        else
+          riverctl set-view-tags "$tags"
+        fi
+        if [ "$action" = follow ]; then
+          riverctl focus-output "$out"
+          riverctl set-focused-tags "$tags"
+        fi ;;
+    esac
+  '';
+
   # footclient attaches to the foot server (instant startup); fall back to a
   # standalone foot if the server isn't running.
   term = pkgs.writeShellScriptBin "term" ''footclient "$@" || exec foot "$@"'';
@@ -48,7 +81,8 @@ in
     case "$1" in
       open)
         ${eww} update dash_open=true
-        ${eww} open dashboard
+        # Main monitor; fall back to the first one if it's unplugged
+        ${eww} open dashboard --screen HDMI-A-1 || ${eww} open dashboard --screen 0
         riverctl enter-mode dashboard ;;
       close)
         ${eww} close dashboard
@@ -63,5 +97,22 @@ in
   dash-run = pkgs.writeShellScriptBin "dash-run" ''
     dash close
     riverctl spawn "$*"
+  '';
+
+  # Show/hide the scratchpad terminal. It lives on a hidden tag (see
+  # river.nix); started on first use.
+  scratchpad = pkgs.writeShellScriptBin "scratchpad" ''
+    if ! ${pkgs.lswt}/bin/lswt -j \
+      | ${pkgs.jq}/bin/jq -e 'any(.toplevels[]; ."app-id" == "scratchpad")' >/dev/null; then
+      riverctl spawn 'footclient --app-id scratchpad || foot --app-id scratchpad'
+    fi
+    riverctl toggle-focused-tags ${toString scratchTag}
+  '';
+
+  # Re-apply river settings, keybindings and rules after `rebuild`, without
+  # restarting the session programs.
+  river-reload = pkgs.writeShellScriptBin "river-reload" ''
+    RIVER_RELOAD=1 "$HOME/.config/river/init" \
+      && ${pkgs.libnotify}/bin/notify-send -t 2000 "river" "Configuration reloaded"
   '';
 }

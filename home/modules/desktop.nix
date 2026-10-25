@@ -65,7 +65,7 @@ in
   programs.swaylock = {
     enable = true;
     settings = {
-      image = "${pkgs.nixos-artwork.wallpapers.nineish-catppuccin-mocha-alt.gnomeFilePath}";
+      image = "${import ./wallpaper.nix { inherit pkgs; }}";
       scaling = "fill";
       font = c.font;
       indicator-radius = 90;
