@@ -10,6 +10,15 @@
 
   hostname = "nixos"; # also the flake output name: `nixos-rebuild --flake .#nixos`
 
+  # Keyboard layout, for the desktop and the text consoles. Two layouts:
+  # layout = "us,it"; options = "grp:alt_shift_toggle"; (Alt+Shift switches).
+  # Names: `localectl list-x11-keymap-layouts`, `…-variants it`, `…-options`.
+  keyboard = {
+    layout = "us";
+    variant = ""; # e.g. "intl", "dvorak", "colemak"
+    options = ""; # e.g. "caps:escape" (Caps Lock as a second Escape)
+  };
+
   # Monitors from left to right, by connector name (`wlr-randr` lists them).
   # Each owns a set of tags: Super+N jumps to the monitor that owns tag N
   # (tag 10 is on key 0). The primary monitor gets focus at login and shows

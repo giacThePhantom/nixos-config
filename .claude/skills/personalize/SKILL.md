@@ -6,26 +6,27 @@ description: Change how this desktop looks and behaves - colours/theme, fonts, w
 # Personalizing the desktop
 
 Find the right file, change it, then verify with the build-and-verify skill
-(and headless-river-test for behaviour). Keep the README in sync.
+(and headless-river-test for behaviour). Keep the manual (docs/) in sync.
 
 | Change | Where |
 | --- | --- |
 | User, email, hostname | `settings.nix` |
-| Monitors: names, sizes, order, tags | `settings.nix` → `monitors` (derived facts in `home/monitors.nix`) |
+| Monitors: names, sizes, order, tags | `settings.nix` → `monitors` (derived facts in `modules/flake/meta.nix`) |
 | Colours, fonts | `palette.nix` (repo root) |
-| GTK/cursor/icon theme | `home/theme/default.nix` |
-| Wallpaper | `home/theme/wallpaper.nix` (generated from the palette) |
-| Keybindings | `home/river/keys.nix` + README table |
-| Floating windows, rules | `home/river/rules.nix` |
-| Startup programs, idle timeouts | `home/river/autostart.nix` |
-| Dashboard panels | `home/dashboard/eww/` (one .yuck + .scss per panel) |
-| Terminal look | `home/terminal.nix` (`programs.foot.settings`) |
-| Launcher, notifications, lock screen | `home/desktop.nix` |
-| Apps with their own UI (renCal, Spotify) | `home/theme/apps.nix` |
-| TTYs, login screen | `system/theme.nix` (+ tuigreet theme in `system/desktop.nix`) |
+| GTK/cursor/icon theme | `modules/theme/gtk.nix` |
+| Wallpaper | `modules/theme/_wallpaper.nix` (generated from the palette) |
+| Keybindings | `modules/river/keys.nix` + `docs/04-hotkeys.md` |
+| Floating windows, rules | `modules/river/rules.nix` |
+| Startup programs, idle timeouts | `modules/river/autostart.nix` |
+| Dashboard panels | `modules/dashboard/eww/` (one .yuck + .scss per panel) |
+| Terminal look | `modules/terminal.nix` (`programs.foot.settings`) |
+| Launcher, clipboard picker | `modules/launcher/default.nix` (rofi theme, checked at build time) |
+| Notifications, lock screen | `modules/desktop.nix` |
+| Apps with their own UI (renCal, Spotify) | `modules/theme/apps.nix` |
+| TTYs, login screen | `modules/theme/console.nix` (+ tuigreet theme in `modules/river/session.nix`) |
 
 README.md has the full "Where the palette is applied" map. A new app that
-draws its own UI gets its palette mapping in `home/theme/apps.nix`. Check
+draws its own UI gets its palette mapping in `modules/theme/apps.nix`. Check
 first whether it can read GTK colours (Lutris does; Firefox does with its
 "System theme"), which costs nothing.
 
@@ -50,23 +51,23 @@ to exactly one monitor. Positions are computed from widths.
 
 `keys.nix` uses `spawn "cmd args"` for programs and plain river commands
 otherwise (`man riverctl`). Multi-step logic belongs in a script in
-`home/scripts/` (see add-software for registering one), not in escaped
-strings. Test the command in a headless river, update the README table.
+`modules/scripts/` (see add-software for registering one), not in escaped
+strings. Test the command in a headless river, update docs/04-hotkeys.md.
 
 ## Dashboard panels
 
-Panels live in `home/dashboard/eww/`: one `NAME.yuck` + `NAME.scss` each,
+Panels live in `modules/dashboard/eww/`: one `NAME.yuck` + `NAME.scss` each,
 included/imported from `eww.yuck` / `eww.scss`, which hold the shared widgets
 (`card`, `hero`, `section`) and one `defwindow` per panel. To add a panel:
 
 1. `NAME.yuck` with `(defwidget NAME-panel [] (card :title "…" :key "X" (hero …) …))`;
    every `defpoll` gets `:run-while {panel == "NAME"}` so it only runs while shown.
 2. Include it and add its `defwindow` in `eww.yuck`; `@import` its scss in `eww.scss`.
-3. Add it to `panels` in `home/river/keys.nix` (global key + menu letter),
-   a tile in `hub.yuck`, and a row in the README key table.
+3. Add it to `panels` in `modules/river/keys.nix` (global key + menu letter),
+   a tile in `hub.yuck`, and a row in docs/04-hotkeys.md and docs/06-dashboard.md.
 
 Data that needs real logic goes in a script (`dash-agenda`, `dash-media` in
-`home/scripts/`) that prints JSON for a `defpoll`. Commands started from a
+`modules/scripts/`) that prints JSON for a `defpoll`. Commands started from a
 panel go through `dash-run CMD ARGS`, which closes the panel and spawns CMD
 under river. The calendar reads renCal's events with the caldir CLI from
 `~/caldir`; `rencal://event?uid=…` links open an event in renCal.
@@ -80,7 +81,7 @@ the headless-river skill: `tools/headless-river run dash open NAME`, then
 ## Re-enabling Qt theming
 
 No Qt apps are installed, so Qt isn't themed (saves ~330 MB). When adding a
-Qt app: in `home/theme/default.nix` set
+Qt app: in `modules/theme/gtk.nix` set
 `qt = { enable = true; platformTheme.name = "qtct"; style.name = "Fusion"; }`
 and generate `qt6ct/qt6ct.conf` + a colour scheme from `colors`
 (commit 1249f61, `home/modules/theme.nix`, has a complete version).

@@ -1,0 +1,44 @@
+;; System (Super+I): load, memory and disk, plus network and versions.
+
+(defpoll net :interval "5s" :run-while {panel == "system"} :initial ""
+  `nmcli -t -f NAME connection show --active 2>/dev/null | grep -v '^lo$' | head -1`)
+(defpoll ip :interval "5s" :run-while {panel == "system"} :initial ""
+  `ip -4 -o addr show scope global 2>/dev/null | awk '{print $4; exit}'`)
+;; Laptops: battery and power mode; empty (rows hidden) on a desktop
+(defpoll battery :interval "30s" :run-while {panel == "system"} :initial ""
+  `for b in /sys/class/power_supply/BAT*; do [ -r "$b/capacity" ] && echo "$(cat "$b/capacity")% · $(tr "[:upper:]" "[:lower:]" < "$b/status")" && break; done; true`)
+(defpoll powermode :interval "30s" :run-while {panel == "system"} :initial ""
+  `powerprofilesctl get 2>/dev/null || true`)
+(defpoll kernel :interval "1h" :run-while {panel == "system"} :initial "" `uname -r`)
+(defpoll generation :interval "60s" :run-while {panel == "system"} :initial ""
+  `readlink /nix/var/nix/profiles/system | sed -E 's/system-([0-9]+)-link/\1/'`)
+
+(defwidget system-panel []
+  (card :title "System" :key "I"
+    (hero :value host :detail "up ${uptime}")
+    (box :class "rings" :spacing 18
+      (ring :value {EWW_CPU.avg} :icon "󰻠" :name "CPU" :cls "cpu")
+      (ring :value {EWW_RAM.used_mem_perc} :icon "󰍛" :name "Memory" :cls "ram")
+      (ring :value {EWW_DISK["/"].used_perc} :icon "󰋊" :name "Disk" :cls "disk"))
+    (section :text "DETAILS")
+    (box :class "rows" :orientation "v" :space-evenly false :spacing 8
+      (row :name "Network" :value {net == "" ? "offline" : net})
+      (row :name "Address" :value {ip == "" ? "–" : ip})
+      (box :visible {battery != ""} (row :name "Battery" :value battery))
+      (box :visible {powermode != ""} (row :name "Power mode" :value powermode))
+      (row :name "Kernel" :value kernel)
+      (row :name "Generation" :value "NixOS #${generation}"))
+    (box :class "actions" :halign "end"
+      (button :class "action" :onclick "dash-run term btop" "󰏌  Open monitor"))))
+
+(defwidget ring [value icon name cls]
+  (box :class "ring-box" :orientation "v" :space-evenly false :spacing 8
+    (circular-progress :class "ring ${cls}" :value value :thickness 7 :start-at 75 :clockwise true
+      :width 84 :height 84
+      (label :class "ring-icon" :text icon))
+    (label :class "ring-label" :text "${name} ${round(value, 0)}%")))
+
+(defwidget row [name value]
+  (box :class "row"
+    (label :class "row-name" :halign "start" :text name)
+    (label :class "row-value" :halign "end" :limit-width 32 :text value)))

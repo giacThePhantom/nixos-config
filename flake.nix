@@ -3,57 +3,47 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Dendritic layout: every .nix file under ./modules is a flake-parts
+    # module, imported automatically (files and dirs starting with `_` are not)
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+    import-tree.url = "github:vic/import-tree";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Not in nixpkgs; upstream flake pinned to a release tag, built with our
-    # nixpkgs (home/default.nix pins the JS dependency hash for our pnpm).
+    # nixpkgs (modules/apps.nix pins the JS dependency hash for our pnpm).
     rencal = {
       url = "github:t4t5/rencal/v0.8.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Spotify with a palette colour scheme (home/theme/apps.nix)
+    # Spotify with a palette colour scheme (modules/theme/apps.nix)
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Per-project dev environments (modules/dev.nix); only its templates are
+    # used, so its own nixpkgs is never fetched
+    dev-templates = {
+      url = "github:the-nix-way/dev-templates";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # Index of nixpkgs for comma (`, tool`) and "command not found"
+    # suggestions (modules/dev.nix), prebuilt upstream
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # Terminal workspace for AI coding agents (modules/dev.nix); not in
+    # nixpkgs, built from source with our nixpkgs
+    herdr = {
+      url = "github:ogulcancelik/herdr/v0.9.5";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs =
-    { nixpkgs, home-manager, ... }@inputs:
-    let
-      settings = import ./settings.nix;
-      palette = import ./palette.nix;
-      # Extra arguments every system and home module receives
-      args = {
-        inherit inputs settings;
-        inherit (palette) colors fonts;
-      };
-    in
-    {
-      # sudo nixos-rebuild switch --flake ~/.config/nixos (the `rebuild` alias)
-      nixosConfigurations.${settings.hostname} = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = args;
-        modules = [
-          ./hosts/nixos/configuration.nix
-          ./system/desktop.nix
-          ./system/nvidia.nix
-          ./system/storage.nix
-          ./system/gaming.nix
-          ./system/theme.nix
-
-          home-manager.nixosModules.home-manager
-          {
-            # One nixpkgs for system and home, no second evaluation
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "backup";
-            home-manager.extraSpecialArgs = args;
-            home-manager.users.${settings.user.name} = import ./home;
-          }
-        ];
-      };
-    };
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 }

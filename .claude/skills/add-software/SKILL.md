@@ -18,24 +18,27 @@ Home-manager modules: does `programs.<name>` or `services.<name>` exist?
 
 | Kind | Where |
 | --- | --- |
-| User app / CLI tool | `home.packages` in the module it belongs to (`home/default.nix` for standalone apps, `terminal.nix` for CLI) |
+| User app / CLI tool | `home.packages` in the module it belongs to (`modules/apps.nix` for standalone apps, `modules/terminal.nix` for CLI, `modules/dev.nix` for coding tools) |
 | Has a home-manager module (config files!) | `programs.<name> = { enable = true; settings = …; }` with `colors`/`fonts` from the palette |
-| Needs root, a daemon, kernel or hardware | a `system/*.nix` module (`services.*`, `programs.*`, `hardware.*`) |
-| Started with the session | `home/river/autostart.nix`, after the `RIVER_RELOAD` guard, with `&` |
+| Needs root, a daemon, kernel or hardware | `flake.modules.nixos.NAME` in the feature's file (`services.*`, `programs.*`, `hardware.*`) |
+| A whole new feature | new `modules/NAME.nix` defining `flake.modules.{nixos,homeManager}.NAME`, then add `NAME` to `modules/hosts/nixos/default.nix` |
+| Language toolchain (compilers, LSPs) | not globally: a per-project dev shell (`dvt LANG`, docs/10-projects.md) |
+| Started with the session | `modules/river/autostart.nix`, after the `RIVER_RELOAD` guard, with `&` |
 | Not in nixpkgs, upstream has a flake | flake input, see below |
-| Small helper command | `home/scripts/NAME.sh` + one line in `home/scripts/default.nix` |
+| Small helper command | `modules/scripts/NAME.sh` + one line in `modules/scripts/default.nix` |
 
 ## Upstream flake (e.g. renCal)
 
 ```nix
 # flake.nix inputs
 foo = { url = "github:owner/foo/v1.2.3"; inputs.nixpkgs.follows = "nixpkgs"; };
-# a home module
+# a module file: `{ inputs, ... }:` on the outer (flake-parts) function, then
+# in its flake.modules.homeManager.NAME = { pkgs, ... }: { home.packages = [ … ]; }
 inputs.foo.packages.${pkgs.stdenv.hostPlatform.system}.default
 ```
 Pin a release tag. Prefer `follows` (shares libraries with the system); if
 the build then fails on a fixed-output hash ("hash mismatch … got: sha256-…"),
-override that hash (see renCal in `home/default.nix`) rather than dropping
+override that hash (see renCal in `modules/apps.nix`) rather than dropping
 `follows`. Only drop `follows` if it genuinely doesn't build.
 
 ## Helper scripts
@@ -61,5 +64,5 @@ it is large and offer lighter alternatives.
 ## 4. Verify
 
 Build with the build-and-verify skill. For GUI apps, check rules in
-`home/river/rules.nix` (should it float?) and whether a dashboard panel or
+`modules/river/rules.nix` (should it float?) and whether a dashboard panel or
 keybinding is wanted.

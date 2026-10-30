@@ -1,0 +1,58 @@
+// Tag preview: one group of tiles per monitor. Each monitor's active tag is
+// outlined in the accent; on the monitor you are on it also glows, like a
+// hovered dashboard tile. Empty tags fade; the other monitor is dimmer.
+.tagpreview {
+  background-image: linear-gradient(135deg, rgba($bg, 0.95), rgba($bgSecondary, 0.95) 50%, rgba($bgTertiary, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 12px 14px 14px;
+}
+
+.tag-monitor { opacity: 0.7; }
+.tag-monitor.here { opacity: 1; }
+.tag-monitor-name {
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: $textMuted;
+  padding-left: 4px;
+}
+.tag-monitor.here .tag-monitor-name { color: $accentLight; }
+
+.tag-tile {
+  min-width: 104px;
+  min-height: 88px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background-color: $glass;
+  border: 1px solid $glass-border;
+}
+.tag-tile.shown {
+  background-color: rgba($accent, 0.12);
+  border-color: rgba($accent, 0.45);
+}
+.tag-monitor.here .tag-tile.shown {
+  background-color: rgba($accent, 0.2);
+  border-color: rgba($accent, 0.6);
+  box-shadow: $glow;
+}
+.tag-tile.empty:not(.shown) { opacity: 0.55; }
+
+.tag-key {
+  font-size: 12px;
+  font-weight: bold;
+  color: $textMuted;
+}
+.tag-tile.shown .tag-key { color: $accentLight; }
+.tag-count {
+  font-size: 10px;
+  color: $textMuted;
+  background-color: $glass;
+  border-radius: 6px;
+  padding: 0 6px;
+}
+
+.tag-more { font-size: 11px; color: $textMuted; }
+.tag-none { font-size: 11px; color: $textPlaceholder; }
+.tag-title { font-size: 10px; color: $textSecondary; }
+.tag-tile.shown .tag-title { color: $text; }

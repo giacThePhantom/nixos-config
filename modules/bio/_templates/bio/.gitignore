@@ -1,0 +1,17 @@
+# The environment's cache (direnv), workflow caches
+.direnv/
+.snakemake/
+.nextflow*
+work/
+
+# Data and results: not in git (data/README.md says where data comes from)
+data/*
+!data/README.md
+!data/MD5SUMS
+results/
+
+# Build output of `nix build` (e.g. the container image)
+result
+
+# Notebook checkpoints
+.ipynb_checkpoints/

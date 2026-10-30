@@ -1,0 +1,69 @@
+diff -ruN a/river/command/list_views.zig b/river/command/list_views.zig
+--- a/river/command/list_views.zig	1970-01-01 01:00:00.000000000 +0100
++++ b/river/command/list_views.zig	2026-10-30 14:16:10.470488152 +0100
+@@ -0,0 +1,54 @@
++// list-views: every view of every output, one per line, for scripts (a tag
++// preview needs to know what is on each tag, which no protocol tells):
++//
++//   OUTPUT <TAB> TAGS <TAB> FOCUSED (1/0) <TAB> APP-ID <TAB> TITLE
++//
++// Views are listed in each output's stack order. Tabs and newlines in
++// app-ids and titles become spaces.
++
++const std = @import("std");
++const mem = std.mem;
++
++const server = &@import("../main.zig").server;
++const util = @import("../util.zig");
++
++const Error = @import("../command.zig").Error;
++const Seat = @import("../Seat.zig");
++const View = @import("../View.zig");
++
++pub fn listViews(seat: *Seat, args: []const [:0]const u8, out: *?[]const u8) Error!void {
++    if (args.len > 1) return error.TooManyArguments;
++
++    var buffer = std.Io.Writer.Allocating.init(util.gpa);
++    defer buffer.deinit();
++    const writer = &buffer.writer;
++
++    const focused: ?*View = switch (seat.focused) {
++        .view => |view| view,
++        else => null,
++    };
++
++    var outputs = server.root.active_outputs.iterator(.forward);
++    while (outputs.next()) |output| {
++        var views = output.pending.wm_stack.iterator(.forward);
++        while (views.next()) |view| {
++            try writer.print("{s}\t{d}\t{d}\t", .{
++                mem.span(output.wlr_output.name),
++                view.pending.tags,
++                @intFromBool(view == focused),
++            });
++            try writeField(writer, view.getAppId());
++            try writer.writeByte('\t');
++            try writeField(writer, view.getTitle());
++            try writer.writeByte('\n');
++        }
++    }
++
++    out.* = try buffer.toOwnedSlice();
++}
++
++fn writeField(writer: *std.Io.Writer, value: ?[*:0]const u8) Error!void {
++    for (mem.span(value orelse return)) |c| {
++        try writer.writeByte(if (c == '\t' or c == '\n') ' ' else c);
++    }
++}
+diff -ruN a/river/command.zig b/river/command.zig
+--- a/river/command.zig	2026-10-30 14:16:10.464184132 +0100
++++ b/river/command.zig	2026-10-30 14:16:10.469527350 +0100
+@@ -69,6 +69,7 @@
+         .{ "list-input-configs",        @import("command/input.zig").listInputConfigs},
+         .{ "list-inputs",               @import("command/input.zig").listInputs },
+         .{ "list-rules",                @import("command/rule.zig").listRules},
++        .{ "list-views",                @import("command/list_views.zig").listViews },
+         .{ "map",                       @import("command/map.zig").map },
+         .{ "map-pointer",               @import("command/map.zig").mapPointer },
+         .{ "map-switch",                @import("command/map.zig").mapSwitch },

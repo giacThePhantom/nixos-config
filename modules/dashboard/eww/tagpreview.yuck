@@ -1,0 +1,32 @@
+;; Tag preview (scripts/tag-preview.sh): shown for a moment on the monitor
+;; where you switched tags. All tags of every monitor, grouped by monitor
+;; left to right, with the windows on each. `tagpreview` is the list of
+;; monitors: {name, here (the one you are on), tiles}.
+
+(defvar tagpreview "[]")
+
+(defwindow tagpreview :monitor 0 :geometry (geometry :anchor "center")
+  :stacking "overlay" :exclusive false :focusable "none" :namespace "tagpreview"
+  (box :class "tagpreview" :spacing 14
+    (for monitor in tagpreview
+      (box :class "tag-monitor ${monitor.here ? 'here' : ''}" :orientation "v"
+           :space-evenly false :spacing 8
+        (label :class "tag-monitor-name" :halign "start" :text {monitor.name})
+        (box :spacing 8
+          (for tile in {monitor.tiles}
+            (tag-tile :tile tile)))))))
+
+(defwidget tag-tile [tile]
+  (box :class "tag-tile ${tile.shown ? 'shown' : ''} ${tile.count == 0 ? 'empty' : ''}"
+       :orientation "v" :space-evenly false :spacing 8
+    (box :class "tag-head" :space-evenly false
+      (label :class "tag-key" :halign "start" :hexpand true :text {tile.key})
+      (label :class "tag-count" :halign "end" :visible {tile.count > 1} :text {tile.count}))
+    (box :class "tag-icons" :halign "center" :valign "center" :vexpand true
+         :space-evenly false :spacing 4
+      (for icon in {tile.icons}
+        (image :icon icon :icon-size "large-toolbar"))
+      (label :class "tag-more" :visible {tile.more > 0} :text "+${tile.more}")
+      (label :class "tag-none" :visible {tile.count == 0} :text "empty"))
+    (label :class "tag-title" :limit-width 13 :show-truncated true
+           :text {tile.count == 0 ? " " : tile.title})))

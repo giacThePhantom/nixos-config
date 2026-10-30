@@ -1,0 +1,52 @@
+;; Dashboard panels: a menu (Super+A) and one window per panel, opened one at
+;; a time by `dash` (modules/scripts/dash.sh). `panel` names the open one; each
+;; panel's polls run only while it is shown, so nothing runs while hidden.
+
+(defvar panel "")
+
+(include "./hub.yuck")
+(include "./calendar.yuck")
+(include "./media.yuck")
+(include "./system.yuck")
+(include "./power.yuck")
+(include "./tagpreview.yuck")
+
+;; Shared by several panels
+(defpoll host :interval "1h" :run-while {panel == "system" || panel == "power"}
+  :initial "" `cat /proc/sys/kernel/hostname`)
+(defpoll uptime :interval "60s" :run-while {panel == "system" || panel == "power"}
+  :initial "" `awk '{s=int($1); d=int(s/86400); if (d) printf "%dd ", d; printf "%dh %dm", int(s%86400/3600), int(s%3600/60)}' /proc/uptime`)
+
+;; Every panel: a card with a small-caps title and the key that opens it,
+;; then a "hero" (one big value over a detail line), then the panel's body.
+(defwidget card [title key]
+  (box :class "card" :orientation "v" :space-evenly false :spacing 18
+    (box :class "card-head" :space-evenly false
+      (label :class "card-title" :halign "start" :hexpand true :text title)
+      (label :class "card-key" :halign "end" :text key))
+    (children)))
+
+(defwidget hero [value detail]
+  (box :class "hero" :orientation "v" :space-evenly false
+    (label :class "hero-value" :halign "start" :limit-width 24 :text value)
+    (label :class "hero-detail" :halign "start" :limit-width 40 :text detail)))
+
+(defwidget section [text]
+  (label :class "section" :halign "start" :text text))
+
+;; Windows: all centred; dash.sh picks the monitor
+(defwindow hub :monitor 0 :geometry (geometry :anchor "center")
+  :stacking "overlay" :exclusive false :focusable "none" :namespace "dash"
+  (hub-panel))
+(defwindow calendar :monitor 0 :geometry (geometry :anchor "center")
+  :stacking "overlay" :exclusive false :focusable "none" :namespace "dash"
+  (calendar-panel))
+(defwindow media :monitor 0 :geometry (geometry :anchor "center")
+  :stacking "overlay" :exclusive false :focusable "none" :namespace "dash"
+  (media-panel))
+(defwindow system :monitor 0 :geometry (geometry :anchor "center")
+  :stacking "overlay" :exclusive false :focusable "none" :namespace "dash"
+  (system-panel))
+(defwindow power :monitor 0 :geometry (geometry :anchor "center")
+  :stacking "overlay" :exclusive false :focusable "none" :namespace "dash"
+  (power-panel))

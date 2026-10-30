@@ -24,7 +24,7 @@ tools/headless-river stop               # always, even after failures
 What it gives you:
 - the real river init in reload mode (settings, keys, rules) plus rivercarro;
 - every script and package of the home profile on `PATH`;
-- `XDG_CONFIG_HOME` pointing at the built configs (eww, foot, fuzzel...).
+- `XDG_CONFIG_HOME` pointing at the built configs (eww, foot, rofi...).
 
 Session programs (mako, foot server, wallpaper, eww daemon) are not started;
 start what the test needs with `r … &`.

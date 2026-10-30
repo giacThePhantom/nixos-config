@@ -1,0 +1,13 @@
+diff -ruN a/riverctl/main.zig b/riverctl/main.zig
+--- a/riverctl/main.zig	2026-10-30 18:34:08.945774483 +0100
++++ b/riverctl/main.zig	2026-10-30 18:34:08.951616946 +0100
+@@ -144,6 +144,9 @@
+         .success => |success| {
+             if (mem.len(success.output) > 0) {
+                 stdout.print("{s}\n", .{success.output}) catch @panic("failed to write to stdout");
++                // stdout is buffered (64 bytes) and exit() does not flush it: without
++                // this, the last partial chunk of the output was lost
++                stdout.flush() catch @panic("failed to write to stdout");
+             }
+             process.exit(0);
+         },

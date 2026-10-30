@@ -20,16 +20,20 @@ echo "exit=$?"                               # nix's status, not a pipe's
 grep -E '^error|SC[0-9]{4}' -A6 /tmp/build.log | head -40
 ```
 
-Shellcheck runs for every `home/scripts/*.sh` inside this build; its
-findings (`SCxxxx`) make the build fail. `exit=0` is the bar to report
-"builds"; anything else, read the log and fix.
+Shellcheck runs for every `modules/scripts/*.sh` inside this build; its
+findings (`SCxxxx`) make the build fail. So do a broken relative link or
+`#heading` in README, AGENTS, docs/ or the skills (`modules/docs.nix`), a
+cheat sheet without a `# Title` first line or with lines over 100 columns
+(`modules/scripts/default.nix`), and a rofi theme syntax error
+(`modules/launcher`). `exit=0` is the bar to report "builds"; anything
+else, read the log and fix.
 
 ## 2. Inspect what was generated
 
 ```sh
 hf=$(nix build ".#nixosConfigurations.$host.config.home-manager.users.$user.home-files" \
   --no-link --print-out-paths)
-ls "$hf/.config"                 # river/init, foot/foot.ini, fuzzel, mako, eww, gtk-*/...
+ls "$hf/.config"                 # river/init, foot/foot.ini, rofi, mako, eww, gtk-*/...
 bash -n "$(readlink -f "$hf/.config/river/init")"   # syntax check the river init
 ```
 
