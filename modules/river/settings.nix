@@ -25,8 +25,22 @@ in
         enable = true;
         package = null; # installed system-wide by programs.river-classic
         xwayland.enable = false; # likewise
-        # No systemd user session: river's init starts everything itself
-        systemd.enable = false;
+        # Programs are river's children (autostart.nix), but the session
+        # target must be up: the screen-sharing portal is Requisite= on
+        # graphical-session.target and refuses to start without it. The
+        # activation is appended after extraConfig, so the RIVER_RELOAD
+        # guard keeps river-reload from restarting it.
+        systemd = {
+          enable = true;
+          variables = [
+            "WAYLAND_DISPLAY"
+            "XDG_CURRENT_DESKTOP"
+            "XDG_SESSION_DESKTOP"
+            "NIXOS_OZONE_WL"
+            "XCURSOR_THEME"
+            "XCURSOR_SIZE"
+          ];
+        };
 
         extraSessionVariables = {
           XDG_CURRENT_DESKTOP = "river";

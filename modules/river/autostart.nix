@@ -1,6 +1,8 @@
 # What the river init does besides settings/keys/rules: lay out monitors and,
 # on session start only, start the session's programs. They are plain
-# children of river (no systemd user services) and exit with it.
+# children of river (no systemd user services) and exit with it. The
+# Wayland environment reaches D-Bus/systemd, and river-session.target starts,
+# at the end of the init (wayland.windowManager.river.systemd, settings.nix).
 #
 # river-reload re-runs the init with RIVER_RELOAD=1, which stops before the
 # session-start part.
@@ -41,10 +43,6 @@ in
 
         # ---- Session start only ----
         ${startTags}
-        # Portals and other D-Bus-activated services need the Wayland env
-        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd \
-          WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP NIXOS_OZONE_WL XCURSOR_THEME XCURSOR_SIZE
-
         rivercarro -per-tag -inner-gaps 4 -outer-gaps 6 -main-ratio 0.55 &
         ${pkgs.swaybg}/bin/swaybg -m fill -c '#${c.bg}' -i ${wallpaper} &
         # Night light: warmer colours from 20:30 to 07:00, easier on the eyes late

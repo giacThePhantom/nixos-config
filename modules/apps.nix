@@ -27,6 +27,7 @@ in
             outputHash = "sha256-7A4skNohokIWHI4AjTZJCwWHzL8AYvf3GeqfkQjwwpU=";
           };
         }))
+        pkgs.zoom-us # video calls; screen sharing goes through the wlr portal
         # Spotify comes from programs.spicetify (theme/apps.nix)
       ];
 
