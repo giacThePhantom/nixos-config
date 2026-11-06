@@ -30,7 +30,9 @@ opens btop, for the full picture.
 
 ## Power: `Super + Shift + E`
 
-Lock, suspend, log out, reboot, shut down, plus how long the computer has
-been on.
+Keep the screen on, lock, suspend, log out, reboot, shut down, plus how
+long the computer has been on. *Keep on* stops the screen locking and
+turning off until you click it again (or `Super + Control + Escape`); while
+it's on, the button is lit.
 
 Next: [Terminal](07-terminal.md).

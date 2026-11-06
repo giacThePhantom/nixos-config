@@ -43,6 +43,7 @@ configuration.
 | `Super + N` / `Super + Shift + N` | dismiss / bring back a notification |
 | `Super + Control + N` | do not disturb on/off: notifications wait until it's off |
 | `Super + Escape` | lock the screen |
+| `Super + Control + Escape` | keep the screen on (no lock, no screens off) / back to normal |
 | `Super + Shift + R` | reload keys, window rules and colours (after `rebuild`) |
 | Media keys | volume, mute, play/pause, next, previous (also when locked) |
 | Brightness keys | screen brightness, on laptops (also when locked) |

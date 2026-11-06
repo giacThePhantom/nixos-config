@@ -109,6 +109,7 @@ in
         (script "zk-paper" [ pkgs.papis pkgs.zk pkgs.gawk ] { })
         (script "river-reload" [ pkgs.libnotify ] { })
         (script "dnd" [ pkgs.mako pkgs.libnotify ] { })
+        (script "awake" [ river-tools pkgs.libnotify ] { })
         (script "zoom" [ pkgs.gnused ] { ZOOM = "${pkgs.zoom-us}/bin/zoom"; })
         (script "clipboard" [ pkgs.cliphist pkgs.rofi pkgs.wl-clipboard ] { })
         (script "record" [ pkgs.wf-recorder pkgs.slurp pkgs.libnotify river-tools ] {

@@ -113,6 +113,7 @@ in
             "Super+Shift N" = spawn "makoctl restore";
             "Super+Control N" = "spawn dnd"; # do not disturb, on/off
             "Super Escape" = spawn "loginctl lock-session";
+            "Super+Control Escape" = "spawn awake"; # screen stays on, on/off
             "Super+Shift R" = "spawn river-reload";
 
             # Windows: vim-style focus/move, crossing monitors at the edges

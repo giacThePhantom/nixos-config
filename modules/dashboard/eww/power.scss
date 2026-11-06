@@ -1,4 +1,4 @@
-// Power: five large buttons
+// Power: six large buttons
 .power-btn {
   padding: 16px 8px;
   min-width: 78px;
@@ -9,6 +9,8 @@
 }
 .power-icon { font-size: 26px; }
 .power-name { font-size: 12px; color: $textMutedStrong; }
+.awake .power-icon { color: $accentLight; }
+.awake.on { border-color: $accent; box-shadow: $glow; } // lit while it's on
 .lock .power-icon { color: $infoText; }
 .suspend .power-icon { color: $successText; }
 .logout .power-icon { color: $warningText; }

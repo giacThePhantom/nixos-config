@@ -1,9 +1,14 @@
-;; Power (Super+Shift+E): lock, suspend, log out, reboot, shut down.
+;; Power (Super+Shift+E): keep awake, lock, suspend, log out, reboot, shut down.
+
+;; Whether the screen is kept on (scripts/awake.sh)
+(defpoll awake :interval "5s" :run-while {panel == "power"} :initial "off" `awake status`)
 
 (defwidget power-panel []
   (card :title "Power" :key "E"
-    (hero :value host :detail "up ${uptime}")
+    (hero :value host :detail "up ${uptime}${awake == "on" ? " · screen stays on" : ""}")
     (box :class "power" :spacing 10
+      (power-btn :icon "󰅶" :name {awake == "on" ? "Awake" : "Keep on"}
+        :cls "awake ${awake}" :cmd "dash close; awake")
       (power-btn :icon "󰌾" :name "Lock" :cls "lock" :cmd "dash close; loginctl lock-session")
       (power-btn :icon "󰒲" :name "Suspend" :cls "suspend" :cmd "dash close; systemctl suspend")
       (power-btn :icon "󰍃" :name "Log out" :cls "logout" :cmd "riverctl exit")
