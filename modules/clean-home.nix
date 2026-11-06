@@ -70,6 +70,7 @@
         CONDARC = "${configHome}/conda/condarc";
         # Tools
         GNUPGHOME = "${dataHome}/gnupg";
+        PARALLEL_HOME = "${configHome}/parallel"; # GNU parallel, not ~/.parallel
         # Claude Code: ~/.claude and ~/.claude.json both go in here
         CLAUDE_CONFIG_DIR = "${configHome}/claude";
         DOCKER_CONFIG = "${configHome}/docker";

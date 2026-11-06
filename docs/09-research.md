@@ -11,9 +11,13 @@ These are installed for everyone. Languages, pipelines and their packages
 | Check a FASTQ or FASTA | `seqkit stats reads.fq.gz` (also `seqkit head`, `grep`, `sample`...) |
 | Look into a BAM, CRAM or SAM | `samtools view -h sample.bam \| less`, `samtools flagstat sample.bam` |
 | Compress and index for genome browsers | `bgzip calls.vcf`, `tabix -p vcf calls.vcf.gz` |
+| Peek at variants | `bcftools view -H calls.vcf.gz \| less`, `bcftools stats calls.vcf.gz` |
+| Overlap intervals | `bedtools intersect -a peaks.bed -b genes.bed -wa -u` |
 | Explore a big table | `vd counts.tsv` (visidata: a spreadsheet in the terminal; also .csv, .xlsx, .json) |
 | Query tables with SQL | `duckdb -c "select gene, sum(n) from 'counts.tsv' group by gene"` |
 | Compress fast | `pigz` (gzip on every core), `zstd` |
+| Run one command per file, on every core | `parallel samtools index ::: *.bam` |
+| See how far a long pipe has got | `pv reads.fq.gz \| zcat \| wc -l` |
 | Find what fills your disk | `dua i`: folders by size; `d` marks, `Ctrl + R` deletes |
 | Download big files fast, resumably | `aria2c -x 8 URL` (eight connections; rerun to resume) |
 | Download from SRA | in a project: `dvt bio download` gives `prefetch` and `fasterq-dump` |
@@ -40,6 +44,11 @@ back. Each finished job shows a notification, done or failed.
 
 For a command in the terminal you're watching, `alert` does the same:
 `alert snakemake --cores 8` tells you when it ends and how long it took.
+
+If a job needs more memory than the computer has, it is stopped (with a
+notification) once memory and most of the swap are used up, before the
+desktop grinds to a halt. Run it on the cluster instead, or with fewer
+threads: many tools use more memory per thread.
 
 On the cluster, `hpc-wait hpc 123456 123457` waits for those SLURM jobs to
 leave the queue and then notifies you of each one's result (completed,

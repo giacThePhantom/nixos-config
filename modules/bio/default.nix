@@ -36,6 +36,8 @@
         seqkit # FASTA/FASTQ: stats, grep, sample, convert
         samtools # SAM/BAM/CRAM
         htslib # bgzip, tabix
+        bcftools # VCF/BCF: view, query, stats
+        bedtools # intervals: intersect, merge, coverage
       ];
 
       # Environments under ~/.local/share/mamba, not ~/micromamba
