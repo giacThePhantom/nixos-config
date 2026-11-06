@@ -34,6 +34,13 @@ in
             border-color = "#${c.warning}";
             default-timeout = 0;
           };
+          # Do not disturb (Super+Ctrl+N, scripts/dnd.sh), e.g. while sharing
+          # the screen: nothing shows, and what arrives waits until it's off
+          "mode=do-not-disturb" = {
+            invisible = 1;
+            ignore-timeout = 1;
+            default-timeout = 0;
+          };
         };
       };
 

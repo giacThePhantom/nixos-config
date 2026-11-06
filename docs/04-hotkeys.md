@@ -41,6 +41,7 @@ configuration.
 | `Super + Print` | record a region of the screen; again to stop (saved in `~/Videos/Recordings`) |
 | `Super + Shift + P` | passwords: find one, copy it (cleared after 30 s) |
 | `Super + N` / `Super + Shift + N` | dismiss / bring back a notification |
+| `Super + Control + N` | do not disturb on/off: notifications wait until it's off |
 | `Super + Escape` | lock the screen |
 | `Super + Shift + R` | reload keys, window rules and colours (after `rebuild`) |
 | Media keys | volume, mute, play/pause, next, previous (also when locked) |

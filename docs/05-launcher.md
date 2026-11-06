@@ -90,6 +90,11 @@ the camera), *Share screen* asks which monitor: the screen dims, click the
 one to share. Windows can't be shared one by one, only whole monitors.
 
 The Zoom app shares the same way. Start it from the menu or with `zoom`,
-which sets it up for this: its own sharing settings don't work here.
+which sets it up for this: its own sharing settings don't work here. It
+doesn't follow the system's colours; turn on its dark mode in its settings.
+
+Before sharing, `Super + Control + N` turns on do not disturb, so your
+notifications don't pop up in front of everyone; the same keys turn it off,
+and what arrived meanwhile shows then.
 
 Next: [Dashboard](06-dashboard.md).

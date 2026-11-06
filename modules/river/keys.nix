@@ -111,6 +111,7 @@ in
             "Super Print" = spawn "record region"; # again: stop
             "Super N" = spawn "makoctl dismiss";
             "Super+Shift N" = spawn "makoctl restore";
+            "Super+Control N" = "spawn dnd"; # do not disturb, on/off
             "Super Escape" = spawn "loginctl lock-session";
             "Super+Shift R" = "spawn river-reload";
 

@@ -42,9 +42,9 @@ nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
 ## Hardware
 
 - **Black screen after a kernel or NVIDIA update**: boot the previous
-  generation. If the driver doesn't support the newest kernel yet, use
-  `pkgs.linuxPackages` instead of `pkgs.linuxPackages_latest` in
-  `modules/base.nix`.
+  generation. The system runs the long-term kernel (`pkgs.linuxPackages` in
+  `modules/base.nix`), which the driver supports; very new hardware may
+  need `pkgs.linuxPackages_latest` instead.
 - **A Windows (NTFS) drive won't mount for writing**: Windows left it "in
   use" (Fast Startup). Turn Fast Startup off in Windows.
 

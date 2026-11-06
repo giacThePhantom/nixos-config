@@ -1,5 +1,6 @@
 # Fonts, cursor and GTK theme; apps.nix here themes apps that have their own UI.
-# (No Qt apps are installed, so Qt isn't themed; see the personalize skill.)
+# Qt isn't themed: the one Qt app, Zoom, ships its own Qt and ignores the
+# system theme (it has a dark mode in its settings); see the personalize skill.
 { config, ... }:
 let
   inherit (config) colors fonts;

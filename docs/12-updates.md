@@ -14,13 +14,27 @@ week or two, when you have a few minutes; not right before a deadline.
 Your projects don't change when the system updates: they keep the versions
 in their own `flake.lock` until you run `nix flake update` inside them.
 
+## Firmware
+
+The computer's own firmware (BIOS, SSD, docks, some mice and keyboards)
+isn't part of the system and updates separately, from the makers' shared
+service ([LVFS](https://fwupd.org)). Now and then:
+
+```sh
+fwupdmgr refresh     # what's new
+fwupdmgr update      # install it; a BIOS update finishes on the next restart
+```
+
+Plug in a laptop first. Not every maker publishes there, so "no updates"
+can also mean yours doesn't.
+
 ## Going back
 
 Every `rebuild` creates a new version of the system (the *generation*; the
 System panel, `Super + I`, shows its number). The old ones stay:
 
 - If an update breaks something, restart and pick the previous generation in
-  the boot menu.
+  the boot menu (it lists the last ten).
 - To make the rollback permanent, undo the change in `~/.config/nixos`
   (`git checkout flake.lock`, or your edit) and `rebuild`.
 
