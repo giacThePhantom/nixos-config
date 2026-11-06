@@ -86,7 +86,10 @@ another, or you run your own Vaultwarden server, change it in
 ## Sharing your screen
 
 In a video call in Firefox (Meet, Teams, Zoom; web apps can't share or use
-the camera), *Share screen* asks which monitor: the screen dims, click the one to share. Windows can't
-be shared one by one, only whole monitors.
+the camera), *Share screen* asks which monitor: the screen dims, click the
+one to share. Windows can't be shared one by one, only whole monitors.
+
+The Zoom app shares the same way. Start it from the menu or with `zoom`,
+which sets it up for this: its own sharing settings don't work here.
 
 Next: [Dashboard](06-dashboard.md).

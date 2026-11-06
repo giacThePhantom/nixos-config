@@ -14,7 +14,12 @@ in
   };
 
   flake.modules.homeManager.apps =
-    { config, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       c = colors;
     in
@@ -27,7 +32,10 @@ in
             outputHash = "sha256-7A4skNohokIWHI4AjTZJCwWHzL8AYvf3GeqfkQjwwpU=";
           };
         }))
-        pkgs.zoom-us # video calls; screen sharing goes through the wlr portal
+        # Video calls. Its `zoom` command loses to the script of the same name
+        # (scripts/zoom.sh), which sets Zoom up for screen sharing; the menu
+        # entry runs `zoom` too.
+        (lib.lowPrio pkgs.zoom-us)
         # Spotify comes from programs.spicetify (theme/apps.nix)
       ];
 

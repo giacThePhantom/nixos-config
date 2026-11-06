@@ -63,6 +63,10 @@ in
           timeout 600 '${wlopm} --off "*"' resume '${wlopm} --on "*"' \
           before-sleep '${swaylock}' \
           lock '${swaylock}' &
+        # ...but not while sound plays: video calls (watching someone present)
+        # and videos. Apps' own requests to keep the screen on go to
+        # org.freedesktop.ScreenSaver, which nothing provides here.
+        ${pkgs.wayland-pipewire-idle-inhibit}/bin/wayland-pipewire-idle-inhibit --quiet &
       '';
     };
 }

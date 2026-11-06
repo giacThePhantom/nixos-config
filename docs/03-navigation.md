@@ -63,7 +63,8 @@ command, a running job's log, or notes.
 ## Locking and leaving
 
 - `Super + Escape` locks the screen. It also locks itself after 5 minutes
-  away, and turns the screens off after 10.
+  away, and turns the screens off after 10, but not while sound is
+  playing: a video call or a video keeps the screen on.
 - `Super + Shift + E` opens the power panel: lock, suspend, log out,
   reboot, shut down.
 
