@@ -104,6 +104,8 @@ in
             "Super+Shift M" = "spawn spotify";
             "Super P" = "spawn pwvucontrol";
             "Super V" = "spawn clipboard";
+            # University VPN in a terminal that stays open, to read why it failed
+            "Super+Shift V" = spawn "term --title vpn --hold vpn";
             "None Print" = spawn "screenshot region";
             "Super+Shift S" = spawn "screenshot region";
             "Shift Print" = spawn "screenshot full";

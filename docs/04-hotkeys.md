@@ -34,6 +34,7 @@ configuration.
 | Keys | What |
 | --- | --- |
 | `Super + V` | clipboard history |
+| `Super + Shift + V` | university VPN: connect in a terminal (`Ctrl + C` disconnects, `Super + W` closes it) |
 | `Print` or `Super + Shift + S` | screenshot of a region (saved and copied) |
 | `Shift + Print` | screenshot of the whole screen |
 | `Ctrl + Print` | screenshot of a region to annotate (arrows, boxes, text), then copy |

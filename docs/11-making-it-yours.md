@@ -44,6 +44,30 @@ click and natural scrolling on the touchpad. Closing the lid suspends, and
 the screen is locked when you open it. Your laptop's own screen goes in
 `settings.nix` like any monitor (usually `eDP-1`).
 
+## A new drive
+
+Extra drives are listed in `modules/hardware/storage.nix`, each mounted
+under `/mnt` the first time you open it. To turn a drive into Linux storage
+(**this erases everything on it**):
+
+```sh
+lsblk -o NAME,SIZE,FSTYPE,LABEL,MOUNTPOINTS,MODEL       # find it by size and model
+ls -l /dev/disk/by-id/ | grep -v part                    # its stable name (ata-MODEL_SERIAL)
+disk=/dev/disk/by-id/ata-MODEL_SERIAL                    # that one, not sdX: letters change
+sudo systemctl stop mnt-NAME.automount mnt-NAME.mount    # if it is mounted now
+sudo wipefs -a "$disk"-part* "$disk"                     # forget the old filesystem and partitions
+printf 'label: gpt\n,,L\n' | sudo sfdisk "$disk"         # one Linux partition, the whole disk
+sudo mkfs.ext4 -L NAME "$disk"-part1                     # format it, with a label
+```
+
+Then give it an entry in `storage.nix`, with `device =
+"/dev/disk/by-label/NAME"`, `fsType = "ext4"` and `options = common`,
+`rebuild`, and make it yours once: `ls /mnt/NAME && sudo chown "$USER":users
+/mnt/NAME` (a new ext4 drive belongs to root).
+
+Prefer ext4 for anything Linux uses: games, projects, data. Keep NTFS only
+for a drive that Windows must read too.
+
 ## A clean home folder
 
 Your home folder holds the standard folders (Documents, Downloads, Music,

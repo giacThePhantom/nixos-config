@@ -36,7 +36,7 @@ follow. The same for `g`, `]` and `[`.
 | `Space s r` | back to the last search, where you left it |
 | `Ctrl + S` | save |
 | `Shift + H` / `Shift + L` | previous / next open file |
-| `Ctrl + H/J/K/L` | move between split windows |
+| `Ctrl + H/J/K/L` | move between split windows; at the edge, on to the next zellij pane |
 | `Space q q` | quit |
 
 In a picker: type to filter, `Ctrl + N` / `Ctrl + P` (or the arrows) to
@@ -73,7 +73,11 @@ move, `Ctrl + Y` to accept, `Ctrl + E` to close.
 ### Toggles
 
 `Space u f` format on save, `Space u w` line wrap, `Space u d` errors and
-warnings, `Space u h` type hints.
+warnings, `Space u h` type hints, `Space u m` Markdown rendering.
+
+Markdown files show rendered: headings, lists, tables, code blocks and
+checkboxes are drawn in place, and the line you're on (or all of it, in
+insert mode) shows the plain text you type.
 
 ## Languages in projects
 

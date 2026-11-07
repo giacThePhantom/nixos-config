@@ -107,17 +107,9 @@ for the next / previous match), `e` to open the whole scrollback in Neovim
 
 Without the leader, `Ctrl + H / J / K / L` moves to the pane on that side,
 and inside Neovim it moves between Neovim's splits first, then out into the
-next pane. (In the shell this takes `Ctrl + L`: type `clear` instead.) For
-the Neovim half, add [zellij-nav.nvim](https://github.com/swaits/zellij-nav.nvim)
-to your Neovim configuration:
-
-```lua
-vim.pack.add({ "https://github.com/swaits/zellij-nav.nvim" })
-require("zellij-nav").setup()
-for key, dir in pairs({ h = "Left", j = "Down", k = "Up", l = "Right" }) do
-  vim.keymap.set("n", "<C-" .. key .. ">", "<cmd>ZellijNavigate" .. dir .. "<cr>")
-end
-```
+next pane. (In the shell this takes `Ctrl + L`: type `clear` instead.)
+Neovim's half is [zellij-nav.nvim](https://github.com/swaits/zellij-nav.nvim),
+in your Neovim configuration (`~/.config/nvim/lua/plugins/zellij-nav.lua`).
 
 The bar at the bottom shows the session's name and its tabs; on the right,
 the mode while a leader command is under way (`LEADER`, `RESIZE`,

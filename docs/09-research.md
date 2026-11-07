@@ -78,8 +78,15 @@ mkdir -p ~/hpc && sshfs hpc:/scratch/your-username ~/hpc   # browse, open, copy
 fusermount -u ~/hpc                                        # when done
 ```
 
-**University VPN.** AnyConnect, GlobalProtect and Pulse VPNs go through
-NetworkManager. Create yours once (address and type from your university's
+**University VPN (GlobalProtect with single sign-on).** `Super + Shift + V`,
+or `vpn` in a terminal, connects to the portal in `settings.nix`
+(`vpnPortal`): a window opens on the university's login page (with its MFA
+step), then `sudo` asks for your password to open the tunnel. It stays
+connected while that terminal runs; `Ctrl + C` there, or `vpn off`
+elsewhere, disconnects. It sends the host report (HIP) some portals ask for.
+
+**Other university VPNs.** AnyConnect, GlobalProtect and Pulse VPNs without
+single sign-on go through NetworkManager. Create yours once (address and type from your university's
 IT pages; `protocol` is `anyconnect`, `gp` or `pulse`), then connect:
 
 ```sh

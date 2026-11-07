@@ -4,7 +4,7 @@
 # script's PATH and `env` exports Nix values to it.
 { config, inputs, ... }:
 let
-  inherit (config) colors monitors;
+  inherit (config) colors monitors settings;
   # Every flake template (dev.nix, bio/) as "NAME=PATH NAME=PATH...", for dvt
   templates = builtins.concatStringsSep " " (
     builtins.attrValues (builtins.mapAttrs (name: t: "${name}=${t.path}") config.flake.templates)
@@ -88,7 +88,7 @@ in
         (script "move-dir" [ river-tools ] { })
         (script "tag" [ riverctl river-tools pkgs.river-bnf ] { })
         (script "scratchpad" [ riverctl pkgs.lswt pkgs.jq ] { SCRATCH_TAG = monitors.scratchTag; })
-        (script "dash" [ riverctl pkgs.eww ] { PRIMARY_OUTPUT = monitors.primary.name; })
+        (script "dash" [ riverctl pkgs.eww pkgs.procps ] { PRIMARY_OUTPUT = monitors.primary.name; })
         (script "dash-run" [ riverctl ] { })
         (script "dash-agenda" [ caldir pkgs.jq ] { })
         (script "dash-media" [ pkgs.playerctl pkgs.curl pkgs.jq ] { })
@@ -98,11 +98,22 @@ in
           MUTED = colors.textMuted;
           CHEATSHEETS = "${cheatsheets}";
         })
-        (script "tag-preview" [ river-tools riverctl pkgs.eww pkgs.jq pkgs.gawk pkgs.findutils ] {
-          MONITOR_TAGS = lib.concatMapStringsSep " " (
-            m: "${m.name}=${lib.concatMapStringsSep "," toString m.tags}"
-          ) monitors.all;
-        })
+        (script "tag-preview"
+          [
+            river-tools
+            riverctl
+            pkgs.eww
+            pkgs.jq
+            pkgs.gawk
+            pkgs.findutils
+            pkgs.procps
+          ]
+          {
+            MONITOR_TAGS = lib.concatMapStringsSep " " (
+              m: "${m.name}=${lib.concatMapStringsSep "," toString m.tags}"
+            ) monitors.all;
+          }
+        )
         (script "alert" [ pkgs.libnotify ] { })
         (script "hpc-wait" [ pkgs.libnotify pkgs.openssh ] { })
         (script "cheat" [ pkgs.bat pkgs.fzf ] { CHEATSHEETS = "${cheatsheets}"; })
@@ -110,6 +121,10 @@ in
         (script "river-reload" [ pkgs.libnotify ] { })
         (script "dnd" [ pkgs.mako pkgs.libnotify ] { })
         (script "awake" [ river-tools pkgs.libnotify ] { })
+        (script "vpn" [ ] {
+          GPCLIENT = "${pkgs.gpclient}/bin/gpclient";
+          VPN_PORTAL = settings.vpnPortal;
+        })
         (script "zoom" [ pkgs.gnused pkgs.bubblewrap ] { ZOOM = "${pkgs.zoom-us}/bin/zoom"; })
         (script "clipboard" [ pkgs.cliphist pkgs.rofi pkgs.wl-clipboard ] { })
         (script "record" [ pkgs.wf-recorder pkgs.slurp pkgs.libnotify river-tools ] {

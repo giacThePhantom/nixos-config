@@ -10,6 +10,9 @@
 
   hostname = "nixos"; # also the flake output name: `nixos-rebuild --flake .#nixos`
 
+  # Your university's GlobalProtect VPN portal, for `vpn` (Super+Shift+V)
+  vpnPortal = "vpn-mfa.icts.unitn.it";
+
   # Keyboard layout, for the desktop and the text consoles. Two layouts:
   # layout = "us,it"; options = "grp:alt_shift_toggle"; (Alt+Shift switches).
   # Names: `localectl list-x11-keymap-layouts`, `…-variants it`, `…-options`.

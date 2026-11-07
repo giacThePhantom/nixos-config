@@ -84,7 +84,19 @@ index_icons() {
   mv "$icons.new" "$icons"
 }
 
+# eww commands wait only 100 ms for the daemon. When it is slower (busy
+# drawing a window), `eww daemon` and a plain `eww open` take it for dead and
+# start a second daemon, which steals the socket: windows of the first can
+# then never be closed. So: be patient before deciding it is gone, start one
+# only if no daemon process exists, and open with --no-daemonize.
 running() { eww ping >/dev/null 2>&1; }
+ensure_daemon() {
+  for _ in $(seq 100); do running && return 0; sleep 0.02; done
+  if ! pgrep -u "$(id -u)" -f '^([^ ]*/)?eww daemon' >/dev/null; then
+    eww daemon
+    for _ in $(seq 100); do running && return 0; sleep 0.02; done
+  fi
+}
 
 # Every monitor, left to right: [{name, tags, focused}]
 monitors() {
@@ -125,19 +137,15 @@ show() {
               }]
         }]')"
 
-  if ! running; then
-    # The session starts it (river/autostart.nix) and it may still be coming
-    # up: wait for it, and start one only if it really is not there
-    for _ in $(seq 100); do running && break; sleep 0.02; done
-    if ! running; then
-      eww daemon
-      for _ in $(seq 100); do running && break; sleep 0.02; done
-    fi
-  fi
+  # The session starts it (river/autostart.nix); it may still be coming up
+  ensure_daemon
   eww update tagpreview="$json"
   if [ "$shown" != "$here" ]; then
     if [ -n "$shown" ]; then eww close tagpreview >/dev/null 2>&1 || true; fi
-    eww open tagpreview --screen "$here" && shown="$here"
+    # Counted as shown even if eww reports a timeout: the window may well
+    # have opened, and hide must close it
+    eww --no-daemonize open tagpreview --screen "$here" >/dev/null 2>&1 || true
+    shown="$here"
   fi
 }
 
