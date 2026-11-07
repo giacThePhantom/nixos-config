@@ -1,4 +1,4 @@
-# App launcher (Super+D) and the other pickers (clipboard): rofi, themed as
+# App launcher (Super+Space) and the other pickers (clipboard): rofi, themed as
 # a dashboard card (gradient glass, 20px corners, small-caps title), driven
 # by scripts/launcher.sh, which puts categories (web apps, capture, setup,
 # system, keybindings...) above every app in one searchable list. Web apps

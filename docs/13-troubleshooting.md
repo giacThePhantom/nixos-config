@@ -72,7 +72,7 @@ system-wide: software comes from `~/.config/nixos` (for you) or a project's
 `flake.nix` (for a project). Inside a project, `python -m venv` and
 `pip install` work as usual if you really need them.
 
-**Where is the app store?** `Super + D` for what's installed;
+**Where is the app store?** `Super + Space` for what's installed;
 [search.nixos.org](https://search.nixos.org/packages) to find more, `, name`
 to try it, [Adding software](11-making-it-yours.md#adding-software) to keep it.
 

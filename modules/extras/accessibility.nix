@@ -1,5 +1,5 @@
 # Opt-in: accessibility. The Orca screen reader, started at login (quit:
-# Orca+Q, the Orca key is Insert; again: Super+D > Setup > Screen reader),
+# Orca+Q, the Orca key is Insert; again: Super+Space > Setup > Screen reader),
 # with speech; a magnifier on Super+Alt+Z (it follows the mouse, Esc
 # closes); larger text in apps and a larger cursor. +760 MiB, almost all of
 # it the voices. Enable it in both lists in hosts/.

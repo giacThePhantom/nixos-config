@@ -5,7 +5,7 @@
     { pkgs, ... }:
     {
       # University VPNs (Cisco AnyConnect, GlobalProtect, Pulse/Ivanti) in
-      # NetworkManager: `nmtui`, or Super+D > Setup > Network
+      # NetworkManager: `nmtui`, or Super+Space > Setup > Network
       networking.networkmanager.plugins = [ pkgs.networkmanager-openconnect ];
     };
 

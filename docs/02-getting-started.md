@@ -48,25 +48,25 @@ login screen.
 | Keys | What |
 | --- | --- |
 | `Super + Return` | a terminal |
-| `Super + D` | the launcher: every app, and menus for everything else |
-| `Super + Q` | close the window |
+| `Super + Space` | the launcher: every app, and menus for everything else |
+| `Super + W` | close the window |
 | `Super + 1` … `Super + 0` | go to workspace 1 … 10 |
 | `Super + A` | the dashboard: calendar, media, system, power |
 
 That's enough to work. When you wonder "is there a key for this?", open
-*Super + D > Keybindings* and type what you're looking for.
+*Super + Space > Keybindings* and type what you're looking for.
 
 ## Your first ten minutes
 
 1. **Connect to the internet.** Wired works by itself. For Wi-Fi:
-   *Super + D > Setup > Network*, then *Activate a connection*.
-2. **Open Firefox** with `Super + W`, and sign in to what you use.
-   Bluetooth headphones or mouse: *Super + D > Setup > Bluetooth*.
-3. **Install your web apps** (mail, chat, calendar...): *Super + D > Web
+   *Super + Space > Setup > Network*, then *Activate a connection*.
+2. **Open Firefox** with `Super + B`, and sign in to what you use.
+   Bluetooth headphones or mouse: *Super + Space > Setup > Bluetooth*.
+3. **Install your web apps** (mail, chat, calendar...): *Super + Space > Web
    apps > Install web app*. Each becomes an app with its own window and icon.
 4. **Set up your cluster login** (if you have one): see
    [Research tools](09-research.md#the-cluster).
-5. **Try the launcher's search**: `Super + D`, type `fire`, `Enter`.
+5. **Try the launcher's search**: `Super + Space`, type `fire`, `Enter`.
 
 ## Changing the system
 

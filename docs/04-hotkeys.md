@@ -1,7 +1,7 @@
 # Hotkeys
 
 `Super` is the Windows key. This page lists every key; inside the system,
-*Super + D > Keybindings* has the same list, searchable, read from the live
+*Super + Space > Keybindings* has the same list, searchable, read from the live
 configuration.
 
 ## Apps
@@ -12,10 +12,9 @@ configuration.
 | `Super + Alt + Return` | terminal with zellij (panes, sessions; [its keys](07-terminal.md#zellij)) |
 | `Super + Ctrl + Return` | terminal with herdr (a workspace for AI coding agents; [its keys](07-terminal.md#herdr)) |
 | ``Super + ` `` | scratchpad terminal: show / hide |
-| `Super + D` | launcher: apps, web apps and menus (`Esc` goes back) |
-| `Super + W` | Firefox |
+| `Super + Space` | launcher: apps, web apps and menus (`Esc` goes back) |
+| `Super + B` | Firefox |
 | `Super + E` | files (yazi) |
-| `Super + B` | system monitor (btop) |
 | `Super + Shift + M` | Spotify |
 | `Super + P` | volume mixer |
 
@@ -55,7 +54,7 @@ configuration.
 | `Super + H / J / K / L` | focus left / down / up / right, then the next monitor |
 | `Super + Shift + H / J / K / L` | move the window that way, then to the next monitor |
 | `Super + M` | make it the master (on the master: swap in the next window) |
-| `Super + Q` | close |
+| `Super + W` | close |
 | `Super + F` | fullscreen |
 | `Super + T` | floating |
 | `Super + Alt + H / J / K / L` | move a floating window |

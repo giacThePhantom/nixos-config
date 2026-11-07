@@ -4,7 +4,8 @@
 
 | App | For | Open with |
 | --- | --- | --- |
-| Firefox | the web | `Super + W` |
+| Firefox | the web | `Super + B` |
+| Betterbird | email, also university and Gmail accounts (a fine-tuned Thunderbird) | launcher; email links |
 | renCal | calendar (Google, Microsoft, CalDAV) | launcher; events also in `Super + C` |
 | Spotify | music, in the system's colours | `Super + Shift + M` |
 | mpv | video and audio files | opening a file |
@@ -12,10 +13,16 @@
 | zathura | PDFs, with dark pages (`Ctrl + R`: original colours; `J/K` scroll, `/` search) | opening a file |
 | yazi | files, in the terminal | `Super + E` |
 | volume mixer | per-app volume, speakers and microphones | `Super + P` |
-| bluetui | Bluetooth: pair and connect devices | *Super + D > Setup > Bluetooth* |
+| bluetui | Bluetooth: pair and connect devices | *Super + Space > Setup > Bluetooth* |
 
 Files open in the right app by themselves: PDFs in zathura, images in imv,
-videos in mpv, web links in Firefox, folders in yazi.
+videos in mpv, web links in Firefox, email links and `.eml` files in
+Betterbird, folders in yazi.
+
+Betterbird keeps your mail and settings in `~/.config/thunderbird` (back
+that folder up to keep them) and comes with the system's updates, not its
+own. A Google account (your university one included) needs only its
+address: Betterbird recognises it and opens Google's own sign-in window.
 
 ## Optional apps
 

@@ -1,5 +1,5 @@
 # Bluetooth: headphones, mice, keyboards. Pair and connect in the terminal
-# with bluetui (Super+D > Setup > Bluetooth). Audio devices then show up in
+# with bluetui (Super+Space > Setup > Bluetooth). Audio devices then show up in
 # the mixer and the media panel through PipeWire.
 {
   flake.modules.nixos.bluetooth = {

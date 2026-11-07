@@ -1,4 +1,4 @@
-# launcher [MENU]: Super+D. One searchable list: categories on top (Enter
+# launcher [MENU]: Super+Space. One searchable list: categories on top (Enter
 # opens one, Esc goes back), then every app, most used first. Web apps are
 # .desktop files written here and run by `webapp` (launcher/_webapp).
 # Looks: rofi's theme (launcher/default.nix); entries are Pango markup.
@@ -337,7 +337,7 @@ Icon=$icon
 StartupWMClass=webapp.$slug
 Categories=Network;WebBrowser;
 DESKTOP
-  notify-send -r "$note" -i "$icon" "Web app installed" "$name is in the launcher (Super+D)"
+  notify-send -r "$note" -i "$icon" "Web app installed" "$name is in the launcher (Super+Space)"
 }
 
 web_remove() {
@@ -346,7 +346,7 @@ web_remove() {
     add "$name" "${desc#Web app: }" "$icon" "$id"
   done < <(webapp_entries)
   if [ "${#N[@]}" -eq 0 ]; then
-    notify-send "No web apps installed" "Install one from Super+D > Web apps"
+    notify-send "No web apps installed" "Install one from Super+Space > Web apps"
     return 0
   fi
   show "Remove a web app" "Search web apps" || return 0

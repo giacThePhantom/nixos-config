@@ -205,7 +205,7 @@ screen (`Ctrl + Space`, `s`) can't save: change settings in
 
 ## Other tools
 
-- `btop` (`Super + B`): what's using your processor, memory, disks, network.
+- `btop` (or *Open monitor* in the System panel, `Super + I`): what's using your processor, memory, disks, network.
 - `nvtop`: the same, for the graphics card.
 - `gh`: GitHub from the terminal (`gh auth login` once, then `gh repo clone`,
   `gh pr create`...).

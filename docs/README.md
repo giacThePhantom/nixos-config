@@ -8,7 +8,7 @@ need them.
 2. [Getting started](02-getting-started.md): install, first login, the five keys to learn first
 3. [Navigation](03-navigation.md): monitors, tags, windows, layouts
 4. [Hotkeys](04-hotkeys.md): every key, on one page
-5. [Launcher, web apps, capture](05-launcher.md): `Super + D`, sites as apps, screenshots, passwords
+5. [Launcher, web apps, capture](05-launcher.md): `Super + Space`, sites as apps, screenshots, passwords
 6. [Dashboard](06-dashboard.md): calendar, media, system, power
 7. [Terminal](07-terminal.md): the shell and its tools
 8. [Applications](08-applications.md): what's installed, what you can add, gaming

@@ -1,4 +1,4 @@
-# Passwords from Bitwarden (or Vaultwarden): Super+Shift+P, or Super+D >
+# Passwords from Bitwarden (or Vaultwarden): Super+Shift+P, or Super+Space >
 # Passwords, finds an entry and copies its password, cleared from the
 # clipboard after 30 s. rbw is the client; `rbw unlock` asks for the master
 # password in a small dialog, `rbw sync` refreshes, `rbw get NAME` in scripts.

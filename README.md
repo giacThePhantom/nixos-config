@@ -98,7 +98,7 @@ modules/
                           and the tag preview (tagpreview.yuck)
   scripts/                helper commands (*.sh), installed on PATH; _cheatsheets/
                           (the `cheat` sheets for bio tools, SLURM, git...)
-  launcher/               Super+D launcher (rofi theme + scripts/launcher.sh), _webapp/
+  launcher/               Super+Space launcher (rofi theme + scripts/launcher.sh), _webapp/
   desktop.nix             notifications (mako), lock (swaylock)
   terminal.nix            foot, bash, starship, zellij, CLI tools
   editor.nix              Neovim: tools and palette only; its config is ~/.config/nvim, its own repo

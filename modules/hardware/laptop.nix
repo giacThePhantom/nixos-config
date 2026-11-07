@@ -1,4 +1,4 @@
-# Laptops: power modes (Super+D > System), battery in the system panel,
+# Laptops: power modes (Super+Space > System), battery in the system panel,
 # brightness keys, touchpad tap-to-click and natural scrolling. Add `laptop`
 # to both lists of a host that is a laptop. Lid closed = suspend, locked
 # first (river/autostart.nix), which is logind's default.

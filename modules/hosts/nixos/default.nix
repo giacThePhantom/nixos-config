@@ -44,6 +44,7 @@ in
       terminal
       editor
       apps
+      mail
       dev
       bluetooth
       passwords

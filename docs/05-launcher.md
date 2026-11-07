@@ -2,7 +2,7 @@
 
 ## The launcher
 
-`Super + D` opens one list with everything: menus at the top, then every app,
+`Super + Space` opens one list with everything: menus at the top, then every app,
 the ones you use most first. Start typing to filter (`fire` finds Firefox),
 `Enter` to open, `Esc` to go back or close.
 
@@ -28,7 +28,7 @@ Gmail, WhatsApp, Teams, Notion, your university's portal: anything you use in
 a browser tab can become an app, with its own window, its own icon in the
 launcher, and its own place in your workspaces.
 
-To install one: *Super + D > Web apps > Install web app*. Type a name
+To install one: *Super + Space > Web apps > Install web app*. Type a name
 (`WhatsApp`) and an address (`web.whatsapp.com`), and that's it. The icon is
 found by itself: the site's own, or a matching one from
 [dashboard-icons](https://github.com/homarr-labs/dashboard-icons). Only if
@@ -59,7 +59,7 @@ forward, `Ctrl + = / - / 0` zoom, `Ctrl + L` copies the page's address.
   boxes, text, highlights, a blur for private details, in the system's
   colours. `Enter` copies and saves it.
 - `Super + Print` records a region of the screen as a video (no sound);
-  press it again to stop. *Super + D > Capture > Record the screen* records
+  press it again to stop. *Super + Space > Capture > Record the screen* records
   the whole monitor. Recordings go to `~/Videos/Recordings`.
 - `Super + V` shows everything you copied recently; pick one to copy it
   again.

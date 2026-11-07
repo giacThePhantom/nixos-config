@@ -34,7 +34,7 @@ right.
 - `Super + M` makes the focused window the master.
 - `Super + F` makes it fullscreen, `Super + T` lets it float above the
   others.
-- `Super + Q` closes it.
+- `Super + W` closes it.
 
 The mouse works too: hold `Super` and drag with the left button to move a
 window, with the right button to resize it.

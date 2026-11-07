@@ -3,21 +3,33 @@
 # allow it are told to use the XDG folders; bash's own files live in
 # ~/.config/bash. What can't move: .ssh (OpenSSH), .pki (NSS, used by
 # browsers), .steam* (Steam). docs/11-making-it-yours.md lists one-time moves.
+{ config, ... }:
+let
+  inherit (config) settings;
+in
 {
   # bash only reads ~/.bash_profile and ~/.bashrc itself; the system files
   # it reads first hand over to ~/.config/bash instead. profile.local runs
   # in /etc/profile before /etc/bashrc; bashrc.local at the very end of
   # /etc/bashrc, after the system's aliases, so ours still win.
-  flake.modules.nixos.clean-home = {
-    environment.etc."profile.local".text = ''
-      if [ -r "$HOME/.config/bash/profile" ]; then . "$HOME/.config/bash/profile"; fi
-    '';
-    environment.etc."bashrc.local".text = ''
-      if [ -n "$PS1" ] && [ -r "$HOME/.config/bash/bashrc" ]; then . "$HOME/.config/bash/bashrc"; fi
-    '';
-    # ~/.nix-profile, ~/.nix-defexpr -> ~/.local/state/nix
-    nix.settings.use-xdg-base-directories = true;
-  };
+  flake.modules.nixos.clean-home =
+    { config, ... }:
+    {
+      environment.etc."profile.local".text = ''
+        if [ -r "$HOME/.config/bash/profile" ]; then . "$HOME/.config/bash/profile"; fi
+      '';
+      environment.etc."bashrc.local".text = ''
+        if [ -n "$PS1" ] && [ -r "$HOME/.config/bash/bashrc" ]; then . "$HOME/.config/bash/bashrc"; fi
+      '';
+      # ~/.nix-profile, ~/.nix-defexpr -> ~/.local/state/nix
+      nix.settings.use-xdg-base-directories = true;
+      # Old PulseAudio libraries (Steam's runtime) ignore PULSE_COOKIE and make
+      # ~/.pulse-cookie; this names the XDG one. (PipeWire doesn't use the
+      # cookie: the socket's permissions do that job.)
+      environment.etc."pulse/client.conf".text = ''
+        cookie-file = ${config.users.users.${settings.user.name}.home}/.config/pulse/cookie
+      '';
+    };
 
   flake.modules.homeManager.clean-home =
     { config, lib, ... }:

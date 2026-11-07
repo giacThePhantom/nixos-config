@@ -39,7 +39,7 @@ screen. Names of layouts, variants and options:
 
 Add `laptop` to both lists in `modules/hosts/nixos/default.nix`: the
 brightness keys, the battery and power mode in the System panel, power modes
-in *Super + D > System* (performance, balanced, power-saver), and tap to
+in *Super + Space > System* (performance, balanced, power-saver), and tap to
 click and natural scrolling on the touchpad. Closing the lid suspends, and
 the screen is locked when you open it. Your laptop's own screen goes in
 `settings.nix` like any monitor (usually `eDP-1`).
