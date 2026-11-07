@@ -82,11 +82,15 @@ both. In zellij, `Ctrl + Space` again (or `Esc`) cancels.
 | --- | --- |
 | `v` / `-` | split: new pane to the right / below |
 | `h` `j` `k` `l` (or arrows) | move to the pane on that side |
-| `x` | close the pane |
+| `H` `J` `K` `L` | move the pane itself, swapping it with its neighbour |
+| `x` / `X` | close the pane / the whole tab |
+| `P` | name the pane: type, `Enter` (or `Esc` to cancel) |
+| `s` | type in every pane of the tab at once (the same command on several servers); again to stop |
 | `z` | zoom: the pane fills the tab; again to go back |
 | `f` | floating panes: show / hide them (the first time, opens one; splitting while they show adds floating ones) |
 | `c` | new tab |
 | `n` / `p` / `1`…`9` | next / previous / that tab |
+| `<` / `>` | move the tab left / right |
 | `T` | rename the tab: type, `Enter` (or `Esc` to cancel) |
 | `r` | resize mode (below) |
 | `[` | scroll mode (below) |
@@ -101,6 +105,39 @@ Down / Page Up) half a page, `/` to search (type, `Enter`, then `n` / `N`
 for the next / previous match), `e` to open the whole scrollback in Neovim
 (to search, copy or save it); `Esc` or `q` to get back.
 
+Without the leader, `Ctrl + H / J / K / L` moves to the pane on that side,
+and inside Neovim it moves between Neovim's splits first, then out into the
+next pane. (In the shell this takes `Ctrl + L`: type `clear` instead.) For
+the Neovim half, add [zellij-nav.nvim](https://github.com/swaits/zellij-nav.nvim)
+to your Neovim configuration:
+
+```lua
+vim.pack.add({ "https://github.com/swaits/zellij-nav.nvim" })
+require("zellij-nav").setup()
+for key, dir in pairs({ h = "Left", j = "Down", k = "Up", l = "Right" }) do
+  vim.keymap.set("n", "<C-" .. key .. ">", "<cmd>ZellijNavigate" .. dir .. "<cr>")
+end
+```
+
+The bar at the bottom shows the session's name and its tabs; on the right,
+the mode while a leader command is under way (`LEADER`, `RESIZE`,
+`SCROLL`...), with its keys.
+
+The first time zellij starts, its two plugins (the bar and the `Ctrl + H/J/K/L`
+helper) each ask for permission in a small window: press `y` in each. They
+remember it, also across updates.
+
+Ready-made layouts, from a project folder:
+
+```sh
+zellij -l analysis   # Neovim, a shell beside it, the job queue (pueue) below
+zellij -l cluster    # `ssh hpc` and, after Enter, your jobs in its queue
+```
+
+`cluster` uses the host you named `hpc` in `~/.ssh/config.d/` (see
+[Research tools](09-research.md)); the queue pane waits for `Enter` so it
+reuses your login instead of asking for the password again.
+
 Sessions from the shell:
 
 ```sh
@@ -110,13 +147,22 @@ zellij attach analysis    # back into it (zellij a analysis)
 zellij kill-session NAME  # stop one; delete-session also forgets it
 ```
 
+Sessions survive a restart. zellij saves each one every 30 seconds: its
+tabs, panes and their sizes, each pane's folder and command, and what the
+panes showed (with the last 2000 lines of scrollback). After a restart they
+are listed as *EXITED*; `zellij attach analysis`, or `Ctrl + Space` `w` and
+picking it, brings it back as you left it. Panes that were running a
+program (Neovim, `ssh`, a pipeline) show it waiting: press `Enter` to start
+it again. Programs don't resume where they were, only the layout around
+them does, so save your work as usual.
+
 How it's set up (`programs.zellij` in `modules/terminal.nix`, which writes
 `~/.config/zellij/config.kdl`):
 - it starts *locked*, the mode where it ignores keys, and goes back to it
   after every leader command: that is what makes `Ctrl + Space` a leader,
   like tmux's prefix, instead of zellij's default of many `Ctrl` shortcuts
   that clash with programs inside;
-- the compact layout, no frames around panes, no tips at start;
+- a bar with the session and its tabs (zjstatus), no frames around panes, no tips at start;
 - colours from the palette, like the terminal;
 - it only starts when asked: plain terminals stay plain.
 

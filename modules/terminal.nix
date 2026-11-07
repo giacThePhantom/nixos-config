@@ -11,6 +11,46 @@ in
     }:
     let
       c = colors;
+
+      # zellij's bar (zjstatus): session and tabs on the left, the mode only
+      # when it isn't locked, i.e. while a leader command is under way.
+      # Every layout below shares it.
+      zellijBar = ''
+        default_tab_template {
+            children
+            pane size=1 borderless=true {
+                plugin location="zjstatus" {
+                    format_left  "#[fg=#${c.accentLight},bold] {session} {tabs}"
+                    format_right "{mode}"
+                    format_space ""
+                    border_enabled "false"
+                    hide_frame_for_single_pane "false"
+
+                    mode_locked       ""
+                    mode_tmux         "#[bg=#${c.accent},fg=#${c.text},bold] LEADER "
+                    mode_resize       "#[bg=#${c.warning},fg=#${c.bg},bold] RESIZE  hjkl grow, HJKL shrink, Esc "
+                    mode_scroll       "#[bg=#${c.info},fg=#${c.bg},bold] SCROLL  / search, e edit, Esc "
+                    mode_enter_search "#[bg=#${c.info},fg=#${c.bg},bold] SEARCH "
+                    mode_search       "#[bg=#${c.info},fg=#${c.bg},bold] SEARCH  n next, N previous, Esc "
+                    mode_rename_tab   "#[bg=#${c.success},fg=#${c.bg},bold] TAB NAME  Enter, Esc "
+                    mode_rename_pane  "#[bg=#${c.success},fg=#${c.bg},bold] PANE NAME  Enter, Esc "
+
+                    tab_normal   "#[fg=#${c.textMuted}] {index} {name} "
+                    tab_active   "#[bg=#${c.bgSecondary},fg=#${c.text},bold] {index} {name} {sync_indicator}{fullscreen_indicator}{floating_indicator}"
+                    tab_sync_indicator       "TYPING IN ALL PANES "
+                    tab_fullscreen_indicator "zoomed "
+                    tab_floating_indicator   "floating "
+                }
+            }
+        }
+      '';
+
+      # Ctrl+H/J/K/L: move to the pane on that side; in Neovim, between its
+      # splits first (the plugin passes the key on when Neovim is focused;
+      # Neovim needs its half, see docs/07-terminal.md)
+      navigate =
+        key: direction:
+        ''bind "Ctrl ${key}" { MessagePlugin "vim-zellij-navigator" { name "move_focus"; payload "${direction}"; }; }'';
     in
     {
       programs.foot = {
@@ -166,6 +206,12 @@ in
       programs.zellij = {
         enable = true;
         enableBashIntegration = false; # would start it in every shell
+        # Linked to ~/.config/zellij/plugins, so the permissions they ask for
+        # once survive updates (a /nix/store path would ask again each time)
+        plugins = with pkgs.zellijPlugins; [
+          zjstatus # the bar
+          vim-zellij-navigator # Ctrl+H/J/K/L across Neovim and panes
+        ];
         settings = {
           theme = "system";
           # Same mapping as foot's colours; `bg` is the selection/frame colour
@@ -182,16 +228,76 @@ in
             white = "#${c.text}";
             orange = "#${c.warning}";
           };
-          default_layout = "compact";
+          default_layout = "main";
           default_mode = "locked";
           pane_frames = false;
+          # Sessions outlive reboots: every 30 s each one is saved to
+          # ~/.cache/zellij (tabs, panes, layout, folders, commands, and what
+          # the panes show with some scrollback). A session that stopped is
+          # listed as EXITED; attaching resurrects it, its commands waiting
+          # for Enter.
+          session_serialization = true;
+          serialize_pane_viewport = true;
+          scrollback_lines_to_serialize = 2000;
+          serialization_interval = 30;
           show_startup_tips = false;
           show_release_notes = false;
+        };
+        # `zellij -l NAME` (or `zellij -s session -l NAME`) starts with one
+        layouts = {
+          # Just the bar: the first tab is the template with one empty pane
+          main = ''
+            layout {
+                ${zellijBar}
+            }
+          '';
+          # A project: the editor, a shell beside it and the job queue below
+          analysis = ''
+            layout {
+                ${zellijBar}
+                tab name="analysis" focus=true {
+                    pane split_direction="vertical" {
+                        pane command="nvim" size="60%" focus=true
+                        pane split_direction="horizontal" {
+                            pane
+                            pane command="watch" size="40%" {
+                                args "-c" "-t" "-n" "5" "pueue" "--color" "always" "status"
+                            }
+                        }
+                    }
+                }
+            }
+          '';
+          # The cluster (the `hpc` host from ~/.ssh/config.d): a login, and
+          # your jobs in the queue. That pane waits for Enter, so it reuses the
+          # login (ControlMaster) instead of asking for the password twice.
+          cluster = ''
+            layout {
+                ${zellijBar}
+                tab name="cluster" focus=true {
+                    pane split_direction="horizontal" {
+                        pane command="ssh" focus=true {
+                            args "hpc"
+                        }
+                        pane command="ssh" size="30%" start_suspended=true {
+                            args "-t" "hpc" "watch -n 30 squeue --me"
+                        }
+                    }
+                }
+                tab name="local" {
+                    pane
+                }
+            }
+          '';
         };
         extraConfig = ''
           keybinds clear-defaults=true {
               locked {
                   bind "Ctrl Space" { SwitchToMode "tmux"; }
+                  ${navigate "h" "left"}
+                  ${navigate "j" "down"}
+                  ${navigate "k" "up"}
+                  ${navigate "l" "right"}
               }
               tmux {
                   bind "Ctrl Space" "Esc" { SwitchToMode "locked"; }
@@ -201,7 +307,16 @@ in
                   bind "j" "Down" { MoveFocus "Down"; SwitchToMode "locked"; }
                   bind "k" "Up" { MoveFocus "Up"; SwitchToMode "locked"; }
                   bind "l" "Right" { MoveFocus "Right"; SwitchToMode "locked"; }
+                  bind "H" { MovePane "Left"; SwitchToMode "locked"; }
+                  bind "J" { MovePane "Down"; SwitchToMode "locked"; }
+                  bind "K" { MovePane "Up"; SwitchToMode "locked"; }
+                  bind "L" { MovePane "Right"; SwitchToMode "locked"; }
                   bind "x" { CloseFocus; SwitchToMode "locked"; }
+                  bind "X" { CloseTab; SwitchToMode "locked"; }
+                  bind "<" { MoveTab "Left"; SwitchToMode "locked"; }
+                  bind ">" { MoveTab "Right"; SwitchToMode "locked"; }
+                  bind "s" { ToggleActiveSyncTab; SwitchToMode "locked"; }
+                  bind "P" { SwitchToMode "renamepane"; PaneNameInput 0; }
                   bind "z" { ToggleFocusFullscreen; SwitchToMode "locked"; }
                   bind "f" { ToggleFloatingPanes; SwitchToMode "locked"; }
                   bind "r" { SwitchToMode "resize"; }
@@ -259,6 +374,10 @@ in
               renametab {
                   bind "Enter" { SwitchToMode "locked"; }
                   bind "Esc" { UndoRenameTab; SwitchToMode "locked"; }
+              }
+              renamepane {
+                  bind "Enter" { SwitchToMode "locked"; }
+                  bind "Esc" { UndoRenamePane; SwitchToMode "locked"; }
               }
           }
         '';
