@@ -22,17 +22,17 @@ in
       );
 
       # ANSI colour names, resolved through the console palette (theme/console.nix):
-      # magenta = accent, lightmagenta = accentLight, gray = secondary text
+      # blue = accent, lightcyan = infoLight (the logo's light blue), gray = secondary text
       tuigreetTheme = lib.concatStringsSep ";" [
-        "border=magenta"
-        "title=lightmagenta"
+        "border=blue"
+        "title=lightcyan"
         "greet=white"
         "text=gray"
-        "time=lightmagenta"
-        "prompt=lightmagenta"
+        "time=lightcyan"
+        "prompt=lightcyan"
         "input=white"
         "action=darkgray"
-        "button=magenta"
+        "button=blue"
         "container=black"
       ];
     in

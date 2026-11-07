@@ -71,8 +71,8 @@ in
           inputbar-fg = "#${c.text}";
           recolor-lightcolor = "#${c.bg}";
           recolor-darkcolor = "#${c.text}";
-          highlight-color = "rgba(139,92,246,0.4)"; # --accent-glow
-          highlight-active-color = "rgba(167,139,250,0.5)"; # --accent-light
+          highlight-color = "rgba(0,96,240,0.4)"; # --accent-glow
+          highlight-active-color = "rgba(102,212,245,0.5)"; # --accent-light
         };
       };
 

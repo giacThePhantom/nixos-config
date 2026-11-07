@@ -9,26 +9,27 @@
 {
   colors = {
     # Backgrounds, darkest to lightest
-    bgInput = "0c0a21"; # --bg-input (black 20%)
-    bg = "0f0c29"; # --bg-primary
-    bgCard = "1b1834"; # --bg-card (white 5%)
-    bgTertiary = "24243e"; # --bg-tertiary
-    bgSecondary = "302b63"; # --bg-secondary
-    borderHeavy = "3f3d54"; # --border-glass-heavy (white 20%)
+    bgInput = "000119"; # --bg-input (black 20%)
+    bg = "00011f"; # --bg-primary
+    bgCard = "0d0e2a"; # --bg-card (white 5%)
+    bgTertiary = "010339"; # --bg-tertiary
+    bgSecondary = "04145c"; # --bg-secondary
+    borderHeavy = "33344c"; # --border-glass-heavy (white 20%)
 
     # Text, dimmest to brightest
-    textPlaceholder = "575569"; # --placeholder-color (white 30%)
-    textMuted = "878694"; # --text-muted (white 50%)
-    textMutedStrong = "9f9ea9"; # --text-muted-strong (white 60%)
-    textSecondary = "c3c2ca"; # --text-secondary (white 75%)
-    text = "f8fafc"; # --text-primary
+    textPlaceholder = "4d4d62"; # --placeholder-color (white 30%)
+    textMuted = "80808f"; # --text-muted (white 50%)
+    textMutedStrong = "9999a5"; # --text-muted-strong (white 60%)
+    textSecondary = "bfc0c7"; # --text-secondary (white 75%)
+    text = "f5f9ff"; # --text-primary
 
     # Accent
-    accent = "8b5cf6"; # --accent: focus, selection, borders
-    accentHover = "7c3aed"; # --accent-hover
-    accentLight = "a78bfa"; # --accent-light
-    gradientStart = "667eea"; # --accent-gradient-start
-    gradientEnd = "764ba2"; # --accent-gradient-end
+    accent = "2b6cf5"; # --accent: focus, selection, borders
+    accentHover = "0050d8"; # --accent-hover
+    accentLight = "66d4f5"; # --accent-light
+    gradientStart = "0060f0"; # --accent-gradient-start
+    gradientEnd = "8030f0"; # --accent-gradient-end
+    illusSoft = "8a5cff"; # --illus-soft: the violet, for terminal magenta
 
     # Status: strong colour + lighter "-text" variant for text on dark bg
     danger = "ef4444";

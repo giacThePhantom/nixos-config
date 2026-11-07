@@ -51,7 +51,7 @@ in
           base08 = "#${c.dangerText}", base09 = "#${c.warning}",
           base0A = "#${c.warningText}", base0B = "#${c.successText}",
           base0C = "#${c.info}", base0D = "#${c.infoText}",
-          base0E = "#${c.accentLight}", base0F = "#${c.accent}",
+          base0E = "#${c.illusSoft}", base0F = "#${c.accent}",
         }
       '';
 

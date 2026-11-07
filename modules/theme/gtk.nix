@@ -101,8 +101,8 @@ in
           name = "adw-gtk3-dark";
         };
         iconTheme = {
-          # Folder icons in violet, close to the accent
-          package = pkgs.papirus-icon-theme.override { color = "violet"; };
+          # Folder icons in blue, close to the accent
+          package = pkgs.papirus-icon-theme.override { color = "blue"; };
           name = "Papirus-Dark";
         };
         font = {

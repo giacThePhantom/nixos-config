@@ -19,8 +19,8 @@ in
         danger
         success
         warning
-        gradientStart
         accent
+        gradientEnd
         info
         textSecondary
         textPlaceholder
@@ -28,7 +28,7 @@ in
         successText
         warningText
         infoText
-        accentLight
+        illusSoft
         infoLight
         text
       ];

@@ -6,7 +6,7 @@
 $glass: rgba(255, 255, 255, 0.05); // --bg-card
 $glass-hover: rgba(255, 255, 255, 0.08); // --bg-glass-hover
 $glass-border: rgba(255, 255, 255, 0.08); // --border-glass
-$glow: 0 0 15px rgba(139, 92, 246, 0.4); // --accent-glow-box
+$glow: 0 0 15px rgba($gradientStart, 0.4); // --accent-glow-box
 
 * {
   all: unset;

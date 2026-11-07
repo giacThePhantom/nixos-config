@@ -74,8 +74,8 @@ in
             regular1 = c.danger;
             regular2 = c.success;
             regular3 = c.warning;
-            regular4 = c.gradientStart;
-            regular5 = c.accent;
+            regular4 = c.accent;
+            regular5 = c.gradientEnd;
             regular6 = c.info;
             regular7 = c.textMutedStrong;
             bright0 = c.textPlaceholder;
@@ -83,7 +83,7 @@ in
             bright2 = c.successText;
             bright3 = c.warningText;
             bright4 = c.infoText;
-            bright5 = c.accentLight;
+            bright5 = c.illusSoft;
             bright6 = c.infoLight;
             bright7 = c.text;
             selection-foreground = c.text;
@@ -222,8 +222,8 @@ in
             red = "#${c.danger}";
             green = "#${c.success}";
             yellow = "#${c.warningText}";
-            blue = "#${c.gradientStart}";
-            magenta = "#${c.accent}";
+            blue = "#${c.accent}";
+            magenta = "#${c.gradientEnd}";
             cyan = "#${c.info}";
             white = "#${c.text}";
             orange = "#${c.warning}";
