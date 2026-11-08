@@ -48,6 +48,25 @@ in
         @define-color popover_fg_color #${c.text};
         @define-color thumbnail_bg_color #${c.bgCard};
         @define-color thumbnail_fg_color #${c.text};
+
+        /* river asks every window to leave decorations to it (rules.nix), but
+           GTK doesn't speak that protocol and draws its own: no shadows or
+           rounded corners around tiled windows */
+        window.csd,
+        window.csd decoration {
+          box-shadow: none;
+          border-radius: 0;
+        }
+      '';
+
+      # GTK 3's default title bar, on windows without a header bar of their own
+      # (Thunar, xarchiver, dialogs): only a title, which river's border and
+      # the bar already show, so it moves out of sight. Header bars carrying an
+      # app's controls stay.
+      gtk3Css = ''
+        headerbar.default-decoration {
+          margin-top: -100px;
+        }
       '';
 
     in
@@ -109,8 +128,14 @@ in
           name = fonts.ui;
           size = 11;
         };
-        gtk3.extraCss = gtkCss;
+        gtk3.extraCss = gtkCss + gtk3Css;
         gtk4.extraCss = gtkCss;
+        # No minimise/maximise/close buttons in header bars: river tiles, and
+        # Super+W closes. Only the app menu, where an app has one, stays.
+        gtk3.extraConfig.gtk-decoration-layout = "menu:";
+        gtk4.extraConfig.gtk-decoration-layout = "menu:";
       };
+      # On Wayland GTK reads the button layout from here, not settings.ini
+      dconf.settings."org/gnome/desktop/wm/preferences".button-layout = "menu:";
     };
 }

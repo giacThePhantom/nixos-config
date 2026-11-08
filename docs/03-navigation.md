@@ -36,6 +36,11 @@ right.
   others.
 - `Super + W` closes it.
 
+Windows have no title bars or close buttons: a thin border shows which one
+has focus, and the keys above do the rest. Apps that keep their controls in
+the title area (the volume mixer, Lutris) keep that strip, without the window
+buttons.
+
 The mouse works too: hold `Super` and drag with the left button to move a
 window, with the right button to resize it.
 
