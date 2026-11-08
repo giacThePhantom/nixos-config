@@ -63,14 +63,17 @@ in
       programs.swaylock = {
         enable = true;
         settings = {
-          image = "${import ./theme/_wallpaper.nix { inherit pkgs colors; }}";
+          # The logo centred, the name below: the ring appears around the logo
+          # while typing (radius and image are sized together in _wallpaper.nix)
+          image = "${(import ./theme/_wallpaper.nix { inherit pkgs colors fonts; }).lock}";
           scaling = "fill";
           font = fonts.mono;
-          indicator-radius = 90;
+          indicator-radius = 110;
           indicator-thickness = 8;
           show-failed-attempts = true;
           color = c.bg;
-          inside-color = "${c.bg}cc";
+          inside-color = "00000000"; # the logo shows through while typing
+          # Verifying, wrong, cleared: a message over the logo, on a backdrop
           inside-clear-color = "${c.bg}cc";
           inside-ver-color = "${c.bg}cc";
           inside-wrong-color = "${c.bg}cc";

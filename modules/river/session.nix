@@ -72,7 +72,7 @@ in
             user = settings.user.name;
             command = river;
           };
-          default_session.command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --theme '${tuigreetTheme}' --cmd ${river}";
+          default_session.command = "${pkgs.tuigreet}/bin/tuigreet --time --greeting 'Welcome back to EnjoyTheLab' --remember --asterisks --theme '${tuigreetTheme}' --cmd ${river}";
         };
       };
 

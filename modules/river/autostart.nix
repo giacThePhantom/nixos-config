@@ -8,7 +8,7 @@
 # session-start part.
 { config, ... }:
 let
-  inherit (config) colors monitors;
+  inherit (config) colors fonts monitors;
 in
 {
   flake.modules.homeManager.river =
@@ -19,7 +19,7 @@ in
     }:
     let
       c = colors;
-      wallpaper = import ../theme/_wallpaper.nix { inherit pkgs colors; };
+      wallpaper = import ../theme/_wallpaper.nix { inherit pkgs colors fonts; };
       swaylock = "${pkgs.swaylock}/bin/swaylock -f";
       wlopm = "${pkgs.wlopm}/bin/wlopm";
 
@@ -44,7 +44,9 @@ in
         # ---- Session start only ----
         ${startTags}
         rivercarro -per-tag -inner-gaps 4 -outer-gaps 6 -main-ratio 0.55 &
-        ${pkgs.swaybg}/bin/swaybg -m fill -c '#${c.bg}' -i ${wallpaper} &
+        # The logo on the primary monitor, the bare gradient on the others
+        ${pkgs.swaybg}/bin/swaybg -o '*' -m fill -c '#${c.bg}' -i ${wallpaper.plain} \
+          -o ${monitors.primary.name} -m fill -c '#${c.bg}' -i ${wallpaper.branded} &
         # Night light: warmer colours from 20:30 to 07:00, easier on the eyes late
         # (-t night, -T day temperature in kelvin; -s/-S sunset/sunrise)
         ${pkgs.wlsunset}/bin/wlsunset -t 4000 -T 6500 -s 20:30 -S 07:00 &

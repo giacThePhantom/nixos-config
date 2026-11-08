@@ -126,8 +126,12 @@ home and says how to move each one.
 
 Every colour of the system comes from here, named after what it's for: `bg`,
 `text`, `accent`... Change `accent` and the window borders, the launcher's
-highlight, the prompt, the lock screen and the apps follow. The wallpaper is
-generated from the palette too.
+highlight, the prompt, the lock screen and the apps follow. The wallpaper
+(the EnjoyTheLab logo on the primary monitor, the bare gradient on the others),
+the lock screen (the logo, which the password ring circles while you type),
+the boot splash and fastfetch's logo are generated from the palette too. The
+logo is `modules/theme/_branding/wallpaper.svg` (logo and name) and `icon.svg`
+(logo alone), with `@logoEnjoy@`-style placeholders where the colours go.
 
 ## Adding software
 

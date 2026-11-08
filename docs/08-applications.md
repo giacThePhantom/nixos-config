@@ -11,13 +11,14 @@
 | mpv | video and audio files | opening a file |
 | imv | images | opening a file |
 | zathura | PDFs, with dark pages (`Ctrl + R`: original colours; `J/K` scroll, `/` search) | opening a file |
-| yazi | files, in the terminal | `Super + E` |
+| Thunar | files: tabs, split view (`F3`), trash, USB drives, thumbnails; right click to extract or compress archives, or open a terminal or lf there | `Super + E`; opening a folder |
+| lf | files, in the terminal ([its keys](07-terminal.md#lf)) | `Super + Alt + E`; `lf` |
 | volume mixer | per-app volume, speakers and microphones | `Super + P` |
 | bluetui | Bluetooth: pair and connect devices | *Super + Space > Setup > Bluetooth* |
 
 Files open in the right app by themselves: PDFs in zathura, images in imv,
 videos in mpv, web links in Firefox, email links and `.eml` files in
-Betterbird, folders in yazi.
+Betterbird, folders in Thunar.
 
 Betterbird keeps your mail and settings in `~/.config/thunderbird` (back
 that folder up to keep them) and comes with the system's updates, not its

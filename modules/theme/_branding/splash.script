@@ -1,0 +1,79 @@
+// Plymouth boot splash (modules/theme/boot.nix): the branded wallpaper fades
+// in, a bar under the name fills with boot progress, messages and password
+// prompts appear below it. Colours and the font are filled in from the palette.
+
+Window.SetBackgroundTopColor(@bg@);
+Window.SetBackgroundBottomColor(@bg@);
+
+screen_w = Window.GetWidth();
+screen_h = Window.GetHeight();
+
+// Cover the screen, centred, like swaybg -m fill: the desktop then appears
+// with the wallpaper exactly where the splash had it
+wall_image = Image("wallpaper.png");
+scale = Math.Max(screen_w / wall_image.GetWidth(), screen_h / wall_image.GetHeight());
+wall_w = Math.Int(wall_image.GetWidth() * scale);
+wall_h = Math.Int(wall_image.GetHeight() * scale);
+wall_x = Math.Int((screen_w - wall_w) / 2);
+wall_y = Math.Int((screen_h - wall_h) / 2);
+wall = Sprite(wall_image.Scale(wall_w, wall_h));
+wall.SetPosition(wall_x, wall_y, 0);
+wall.SetOpacity(0);
+
+// The name spans 6.1% to 51.2% of the wallpaper's width; its baseline is at 54%
+bar_x = wall_x + Math.Int(wall_w * 0.061);
+bar_y = wall_y + Math.Int(wall_h * 0.585);
+bar_w = Math.Int(wall_w * 0.451);
+bar_h = Math.Max(2, Math.Int(wall_h / 270));
+track = Sprite(Image("track.png").Scale(bar_w, bar_h));
+track.SetPosition(bar_x, bar_y, 1);
+track.SetOpacity(0);
+bar_image = Image("bar.png");
+bar = Sprite();
+bar.SetPosition(bar_x, bar_y, 2);
+
+// Half a second of fade-in (the refresh function runs 50 times a second)
+frame = 0;
+fun refresh() {
+  if (frame < 25) {
+    frame++;
+    wall.SetOpacity(frame / 25);
+    track.SetOpacity(frame / 25);
+  }
+}
+Plymouth.SetRefreshFunction(refresh);
+
+// Progress is estimated by Plymouth from how long the last boot took
+fun boot_progress(duration, progress) {
+  w = Math.Int(bar_w * progress);
+  if (w > 0)
+    bar.SetImage(bar_image.Scale(w, bar_h));
+}
+Plymouth.SetBootProgressFunction(boot_progress);
+
+text_size = Math.Max(10, Math.Int(wall_h / 77));
+font = "@font@ " + text_size;
+
+// `plymouth message`: fsck progress and the like
+message = Sprite();
+message.SetPosition(bar_x, bar_y + bar_h + text_size, 3);
+fun show_message(text) {
+  message.SetImage(Image.Text(text, @textMuted@, 1, font));
+}
+Plymouth.SetMessageFunction(show_message);
+
+// Password prompts (an encrypted disk): the question, one bullet per character
+prompt = Sprite();
+prompt.SetPosition(bar_x, bar_y + bar_h + text_size * 3, 3);
+fun display_password(text, bullets) {
+  dots = "";
+  for (i = 0; i < bullets; i++)
+    dots += "•";
+  prompt.SetImage(Image.Text(text + "  " + dots, @text@, 1, font));
+  prompt.SetOpacity(1);
+}
+Plymouth.SetDisplayPasswordFunction(display_password);
+fun display_normal() {
+  prompt.SetOpacity(0);
+}
+Plymouth.SetDisplayNormalFunction(display_normal);

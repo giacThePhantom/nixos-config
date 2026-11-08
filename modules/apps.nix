@@ -4,14 +4,31 @@ let
   inherit (config) colors fonts;
 in
 {
-  # AppImages (downloaded apps, often from university or vendor sites): run
-  # them directly, `./App.AppImage`, or from the file manager
-  flake.modules.nixos.apps = {
-    programs.appimage = {
-      enable = true;
-      binfmt = true;
+  flake.modules.nixos.apps =
+    { pkgs, ... }:
+    {
+      # AppImages (downloaded apps, often from university or vendor sites):
+      # run them directly, `./App.AppImage`, or from Thunar
+      programs.appimage = {
+        enable = true;
+        binfmt = true;
+      };
+
+      # Thunar, the GUI file manager (GTK 3, so it wears the palette). Right
+      # click > Extract here / Compress (archive plugin with xarchiver); USB
+      # drives mount when plugged in (volman). gvfs gives it the trash and
+      # mounting without root, tumbler the thumbnails.
+      programs.thunar = {
+        enable = true;
+        plugins = with pkgs; [
+          thunar-archive-plugin
+          thunar-volman
+        ];
+      };
+      services.gvfs.enable = true;
+      services.tumbler.enable = true;
+      environment.systemPackages = [ pkgs.xarchiver ];
     };
-  };
 
   flake.modules.homeManager.apps =
     {
@@ -88,6 +105,32 @@ in
           publicShare = null;
           templates = null;
         };
+        # Thunar's right-click actions. Its default "Open Terminal Here" goes
+        # through exo, which doesn't know foot; these use `term`. Managed here,
+        # so Edit > Configure custom actions can't save changes: add them below.
+        configFile."Thunar/uca.xml".text = ''
+          <?xml version="1.0" encoding="UTF-8"?>
+          <actions>
+            <action>
+              <icon>utilities-terminal</icon>
+              <name>Open Terminal Here</name>
+              <unique-id>term-here</unique-id>
+              <command>term --working-directory=%f</command>
+              <description>A terminal in this folder</description>
+              <patterns>*</patterns>
+              <directories/>
+            </action>
+            <action>
+              <icon>system-file-manager</icon>
+              <name>Open in lf</name>
+              <unique-id>lf-here</unique-id>
+              <command>term --working-directory=%f lf</command>
+              <description>This folder in lf, the terminal file manager</description>
+              <patterns>*</patterns>
+              <directories/>
+            </action>
+          </actions>
+        '';
         mimeApps = {
           enable = true;
           defaultApplications = {
@@ -105,7 +148,7 @@ in
             "text/html" = "firefox.desktop";
             "x-scheme-handler/http" = "firefox.desktop";
             "x-scheme-handler/https" = "firefox.desktop";
-            "inode/directory" = "yazi.desktop";
+            "inode/directory" = "thunar.desktop";
           };
         };
       };

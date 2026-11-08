@@ -14,7 +14,7 @@ Find the right file, change it, then verify with the build-and-verify skill
 | Monitors: names, sizes, order, tags | `settings.nix` → `monitors` (derived facts in `modules/flake/meta.nix`) |
 | Colours, fonts | `palette.nix` (repo root) |
 | GTK/cursor/icon theme | `modules/theme/gtk.nix` |
-| Wallpaper | `modules/theme/_wallpaper.nix` (generated from the palette) |
+| Wallpaper, boot splash | `modules/theme/_wallpaper.nix` (logo: `_branding/wallpaper.svg`), `modules/theme/boot.nix` (Plymouth) |
 | Keybindings | `modules/river/keys.nix` + `docs/04-hotkeys.md` |
 | Floating windows, rules | `modules/river/rules.nix` |
 | Startup programs, idle timeouts | `modules/river/autostart.nix` |

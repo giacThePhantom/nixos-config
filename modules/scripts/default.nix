@@ -117,6 +117,14 @@ in
         (script "alert" [ pkgs.libnotify ] { })
         (script "hpc-wait" [ pkgs.libnotify pkgs.openssh ] { })
         (script "cheat" [ pkgs.bat pkgs.fzf ] { CHEATSHEETS = "${cheatsheets}"; })
+        (script "lf-preview" [
+          pkgs.file
+          pkgs.chafa
+          pkgs.bat
+          pkgs.gzip
+          pkgs.libarchive
+          pkgs.poppler-utils
+        ] { })
         (script "zk-paper" [ pkgs.papis pkgs.zk pkgs.gawk ] { })
         (script "river-reload" [ pkgs.libnotify ] { })
         (script "dnd" [ pkgs.mako pkgs.libnotify ] { })

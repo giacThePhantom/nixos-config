@@ -43,8 +43,9 @@ The rest of this page is for people changing the configuration itself.
   shows, while Super is held, a preview of all tags and their windows.
 - **Vim keys across monitors.** `Super+H/J/K/L` focus and `Super+Shift+H/J/K/L`
   move windows, continuing onto the next monitor at the screen edge.
-- **One palette.** `palette.nix` holds every colour and font; the
-  wallpaper is generated from it at build time.
+- **One palette.** `palette.nix` holds every colour and font; the wallpapers
+  and the boot splash (the EnjoyTheLab logo) are generated from it at build
+  time.
 - **Readable, small modules** with a comment on top saying what each is for,
   organised by feature (dendritic, see below).
 
@@ -90,7 +91,8 @@ modules/
                           bluetooth.nix, laptop.nix (brightness, power modes, touchpad)
   gaming.nix              Steam, Lutris, GameMode
   theme/                  console.nix (TTYs), gtk.nix (GTK/cursor/fonts),
-                          apps.nix (renCal, Spotify), _wallpaper.nix
+                          apps.nix (renCal, Spotify), boot.nix (Plymouth splash),
+                          _wallpaper.nix, _branding/ (logo SVG, splash script)
   river/                  session.nix (river patched, greetd login), settings.nix
                           (look, input), keys.nix, rules.nix, autostart.nix,
                           _river-tools/ (river-output, river-try, river-tags-watch), _patches/
@@ -147,13 +149,14 @@ also needs adding to the lists in `modules/hosts/nixos/default.nix`.
 | Dashboard | `modules/dashboard/` (generated `colors.scss`) |
 | Launcher, clipboard picker | `modules/launcher/default.nix` (rofi theme, checked at build time) |
 | Notifications, lock screen | `modules/desktop.nix` |
-| Terminal (foot), prompt, fzf; bat/btop/yazi use the terminal colours | `modules/terminal.nix` |
+| Terminal (foot), prompt, fzf; bat/btop/lf use the terminal colours | `modules/terminal.nix` |
 | Neovim (as `nixos_palette`, read by its own repository) | `modules/editor.nix` |
 | GTK 3/4 apps (Lutris, mixer, file pickers, polkit prompt...) | `modules/theme/gtk.nix` (named GTK colours) |
 | Firefox | not themed yet: keeps the theme chosen in Firefox |
 | renCal, Spotify (Spicetify) | `modules/theme/apps.nix` |
 | mpv, imv, zathura | `modules/apps.nix` |
-| Wallpaper | `modules/theme/_wallpaper.nix` (generated) |
+| Wallpapers (logo on the primary monitor), lock screen and fastfetch logos | `modules/theme/_wallpaper.nix` (generated from `_branding/wallpaper.svg` and `icon.svg`) |
+| Boot splash | `modules/theme/boot.nix` (Plymouth) |
 | TTYs and the login screen | `modules/theme/console.nix`, `modules/river/session.nix` |
 
 Not themed: **Steam** (its client can only be skinned by injecting code into it,

@@ -411,11 +411,84 @@ in
           update_ms = 1000;
         };
       };
-      programs.yazi = {
+      # lf: files in the terminal, in columns (parent, folder, preview), vim
+      # keys. Previews come from scripts/lf-preview.sh; opening a file goes
+      # through xdg-open, so it lands in the same app as from Thunar.
+      programs.lf = {
         enable = true;
-        shellWrapperName = "y"; # `y` = yazi that cd's on exit
+        settings = {
+          icons = true;
+          ignorecase = true;
+          scrolloff = 5;
+          previewer = "lf-preview"; # on PATH, from modules/scripts
+        };
+        commands = {
+          # To the trash (the same one as Thunar's, emptied from there), not
+          # deleted for good
+          trash = ''%IFS="$(printf '\n\t')"; ${pkgs.glib.bin}/bin/gio trash -- $fx'';
+          mkdir = ''%mkdir -p -- "$@"'';
+        };
+        keybindings = {
+          D = "trash";
+          "<delete>" = "trash";
+          a = "push :mkdir<space>";
+          E = "&thunar \"$PWD\""; # this folder in Thunar
+        };
       };
-      programs.fastfetch.enable = true;
+      xdg.configFile."lf/icons".source = "${pkgs.lf.src}/etc/icons.example";
+      # `lf` in the shell: quitting leaves you in the folder you were in
+      programs.bash.initExtra = ''
+        lf() { cd "$(command lf -print-last-dir "$@")" || return; }
+      '';
+      # The EnjoyTheLab logo instead of the NixOS one, as a sixel image (foot
+      # draws them), and the info in the logo's colours
+      programs.fastfetch = {
+        enable = true;
+        settings = {
+          logo = {
+            type = "sixel";
+            source = "${(import ./theme/_wallpaper.nix { inherit pkgs colors fonts; }).icon}";
+            width = 36; # terminal cells; the height follows the image
+            padding = {
+              top = 1;
+              right = 3;
+            };
+          };
+          display.color = {
+            keys = "#${c.logoEnjoy}";
+            title = "#${c.infoLight}";
+          };
+          # fastfetch's defaults: a config without a list shows no info at all
+          modules = [
+            "title"
+            "separator"
+            "os"
+            "host"
+            "kernel"
+            "uptime"
+            "packages"
+            "shell"
+            "display"
+            "wm"
+            "theme"
+            "icons"
+            "font"
+            "cursor"
+            "terminal"
+            "terminalfont"
+            "cpu"
+            "gpu"
+            "memory"
+            "swap"
+            "disk"
+            "localip"
+            "battery"
+            "locale"
+            "break"
+            "colors"
+          ];
+        };
+      };
       programs.tealdeer = {
         enable = true; # `tldr tar`: examples instead of man pages
         settings.updates.auto_update = true;

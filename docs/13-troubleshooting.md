@@ -41,6 +41,9 @@ nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
 
 ## Hardware
 
+- **The boot splash is blank, or you want to see the boot messages**: press
+  `Esc` during boot to switch to the text messages. To turn the splash off,
+  set `boot.plymouth.enable = false;` in `modules/theme/boot.nix`.
 - **Black screen after a kernel or NVIDIA update**: boot the previous
   generation. The system runs the long-term kernel (`pkgs.linuxPackages` in
   `modules/base.nix`), which the driver supports; very new hardware may

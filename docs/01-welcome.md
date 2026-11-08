@@ -27,7 +27,7 @@ still runs the same in two years, and they're gone when you delete the
 project.
 
 **One look.** One palette (`palette.nix`) colours everything: windows,
-terminal, launcher, apps, the login screen, the wallpaper.
+terminal, launcher, apps, the login screen, the wallpaper and the boot splash.
 
 **Two monitors, ten workspaces.** Workspaces (called *tags*) 1 to 5 live on
 the left monitor, 6 to 10 on the right. `Super + 3` always takes you to the

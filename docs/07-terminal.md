@@ -14,7 +14,7 @@ differently from a stock terminal:
 | `ls`, `ll`, `la`, `tree` | list files, with icons and git status (eza) |
 | `cat file` | show a file with colours and line numbers (bat) |
 | `z name` | jump to a folder you've visited before, by part of its name (zoxide) |
-| `y` | browse files (yazi); quitting leaves you in the folder you were in |
+| `lf` | browse files ([keys below](#lf)); quitting leaves you in the folder you were in |
 | `Ctrl + R` | search your command history |
 | `Ctrl + T` / `Alt + C` | pick a file / go to a folder, by fuzzy search |
 | `rg text` | search inside files, fast (ripgrep) |
@@ -195,6 +195,30 @@ first-run tour is off. The file is read-only, so herdr's own settings
 screen (`Ctrl + Space`, `s`) can't save: change settings in
 `modules/terminal.nix`, `rebuild`, then `Ctrl + Space`, `Shift + R`.
 
+## lf
+
+`lf` (or `Super + Alt + E`) browses files in three columns: the parent
+folder, this folder, and a preview of the file under the cursor (images,
+text with colours, the first lines of a `.gz` such as a FASTQ, what's in an
+archive or a PDF). Typing `lf` in the shell leaves you in the folder you
+were in when you quit. For the mouse, tabs and thumbnails there is Thunar
+(`Super + E`).
+
+| Key | What it does |
+| --- | --- |
+| `h` / `l` | up to the parent folder / into a folder, or open a file in its app |
+| `j` / `k`, `gg` / `G` | down / up, first / last |
+| `Space` | select (several files at once) |
+| `y` / `d` / `p` | copy / cut / paste |
+| `D` or `Delete` | move to the trash (the same as Thunar's) |
+| `r` | rename |
+| `a` | new folder |
+| `/` | search; `n` / `N` next / previous |
+| `zh` | show / hide hidden files |
+| `E` | open this folder in Thunar |
+| `w` | a shell here; `exit` comes back |
+| `q` | quit |
+
 ## Other tools
 
 - `btop` (or *Open monitor* in the System panel, `Super + I`): what's using your processor, memory, disks, network.
@@ -206,7 +230,8 @@ screen (`Ctrl + Space`, `s`) can't save: change settings in
 - `alert`: a notification when a command ends (done or failed, and how long
   it took), so you can look away: `alert bwa index ref.fa`.
 - `jq`: read and filter JSON.
-- `fastfetch`: a summary of your system, for screenshots.
+- `fastfetch`: a summary of your system next to the EnjoyTheLab logo, for
+  screenshots.
 - `nvim` is the text editor (`vi` and `vim` open it too): see
   [The editor](15-editor.md).
 

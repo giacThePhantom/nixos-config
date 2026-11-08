@@ -41,6 +41,9 @@
     info = "0dcaf0";
     infoText = "93c5fd";
     infoLight = "abefff"; # --logo-thelab
+
+    # The logo's cyan: "Enjoy" in the name, the bee and the network
+    logoEnjoy = "00cccc"; # --logo-enjoy
   };
 
   fonts = {

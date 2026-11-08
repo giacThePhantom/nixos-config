@@ -14,7 +14,8 @@ configuration.
 | ``Super + ` `` | scratchpad terminal: show / hide |
 | `Super + Space` | launcher: apps, web apps and menus (`Esc` goes back) |
 | `Super + B` | Firefox |
-| `Super + E` | files (yazi) |
+| `Super + E` | files (Thunar) |
+| `Super + Alt + E` | files in the terminal (lf) |
 | `Super + Shift + M` | Spotify |
 | `Super + P` | volume mixer |
 

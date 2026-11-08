@@ -100,7 +100,8 @@ in
             "Super+Control Return" = spawn "term herdr";
             "Super grave" = "spawn scratchpad";
             "Super B" = "spawn firefox";
-            "Super E" = spawn "term yazi";
+            "Super E" = "spawn thunar"; # files
+            "Super+Alt E" = spawn "term lf"; # files in the terminal
             "Super+Shift M" = "spawn spotify";
             "Super P" = "spawn pwvucontrol";
             "Super V" = "spawn clipboard";
