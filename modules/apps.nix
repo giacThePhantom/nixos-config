@@ -46,7 +46,7 @@ in
         # once a release fixes it.
         (inputs.rencal.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
           pnpmDeps = old.pnpmDeps.overrideAttrs {
-            outputHash = "sha256-7A4skNohokIWHI4AjTZJCwWHzL8AYvf3GeqfkQjwwpU=";
+            outputHash = "sha256-m3IXiW5OL1D38PCXkXvX7BJdrdraQgl51PXbi804OaU=";
           };
         }))
         # Video calls. Its `zoom` command loses to the script of the same name

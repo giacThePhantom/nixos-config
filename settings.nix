@@ -28,17 +28,10 @@
   # the dashboard.
   monitors = [
     {
-      name = "DP-1";
+      name = "eDP-1";
       width = 1920;
       height = 1080;
       tags = [ 1 2 3 4 5 ];
-    }
-    {
-      name = "HDMI-A-1";
-      width = 1920;
-      height = 1080;
-      tags = [ 6 7 8 9 10 ];
-      primary = true;
     }
   ];
 }

@@ -17,9 +17,8 @@ in
       home
       theme
       river
-      nvidia
-      storage
-      gaming
+      #storage
+      #gaming
       dev
       bluetooth
       apps
@@ -28,6 +27,7 @@ in
       data
       cluster
       clean-home
+      laptop
       # On a laptop add: laptop (both lists)
       # Opt-in (extras/): containers (Podman + Apptainer, +510 MiB),
       # accessibility (screen reader, magnifier; both lists, +760 MiB)
@@ -53,6 +53,7 @@ in
       cluster
       writing
       clean-home
+      laptop
       # Opt-in (extras/), with what each adds: office (OnlyOffice, +1.3 GiB) OR
       # libreoffice (+1.7 GiB, for Zotero's official plugin), igv (+640 MiB),
       # pymol (+300 MiB), inkscape (+500 MiB), backup (nightly restic, see
