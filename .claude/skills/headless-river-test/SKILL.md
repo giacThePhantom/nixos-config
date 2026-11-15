@@ -41,8 +41,11 @@ start what the test needs with `r … &`.
 ## Gotchas
 
 - Bindings only exist as `riverctl map`s; test the *command* they run (e.g.
-  `r focus-dir left`, `r tag focus 32 HEADLESS-2`), substituting HEADLESS-N
-  for the real monitor names from settings.nix.
+  `r focus-dir left`, `r tag focus 6`). Run `r monitors apply` first: tags
+  belong to monitors only once it has written the layout.
+- The session shares your real `HOME`: when testing `monitors scale` or
+  `swap`, set `XDG_STATE_HOME` to a scratch directory (`r env
+  XDG_STATE_HOME=/tmp/x monitors ...`) or it saves into your real state.
 - Tiling needs a layout: `start` sets `default-layout rivercarro`; if windows
   don't tile, check that rivercarro runs.
 - Screenshots of translucent windows (foot) look washed out with the default

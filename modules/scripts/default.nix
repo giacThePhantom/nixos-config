@@ -82,13 +82,30 @@ in
     in
     {
       home.packages = [
-        river-tools # river-output, river-try, river-tags-watch
+        river-tools # river-output, river-try, river-tags-watch, river-outputs-watch
         (script "term" [ pkgs.foot ] { })
         (script "focus-dir" [ river-tools ] { })
         (script "move-dir" [ river-tools ] { })
-        (script "tag" [ riverctl river-tools pkgs.river-bnf ] { })
+        (script "tag" [ riverctl river-tools pkgs.river-bnf pkgs.gawk ] { })
         (script "scratchpad" [ riverctl pkgs.lswt pkgs.jq ] { SCRATCH_TAG = monitors.scratchTag; })
-        (script "dash" [ riverctl pkgs.eww pkgs.procps ] { PRIMARY_OUTPUT = monitors.primary.name; })
+        (script "dash" [ riverctl pkgs.eww pkgs.procps pkgs.gawk ] { })
+        (script "monitors"
+          [
+            riverctl
+            river-tools
+            pkgs.wlr-randr
+            pkgs.wl-mirror
+            pkgs.jq
+            pkgs.gawk
+            pkgs.util-linux # flock, setsid
+            pkgs.libnotify
+          ]
+          {
+            # settings.nix: layouts, presentation, scale
+            SETTINGS = "${pkgs.writeText "monitors.json" (builtins.toJSON settings.monitors)}";
+            MIRROR_TAG = monitors.mirrorTag;
+          }
+        )
         (script "dash-run" [ riverctl ] { })
         (script "dash-agenda" [ caldir pkgs.jq ] { })
         (script "dash-media" [ pkgs.playerctl pkgs.curl pkgs.jq ] { })
@@ -98,22 +115,15 @@ in
           MUTED = colors.textMuted;
           CHEATSHEETS = "${cheatsheets}";
         })
-        (script "tag-preview"
-          [
-            river-tools
-            riverctl
-            pkgs.eww
-            pkgs.jq
-            pkgs.gawk
-            pkgs.findutils
-            pkgs.procps
-          ]
-          {
-            MONITOR_TAGS = lib.concatMapStringsSep " " (
-              m: "${m.name}=${lib.concatMapStringsSep "," toString m.tags}"
-            ) monitors.all;
-          }
-        )
+        (script "tag-preview" [
+          river-tools
+          riverctl
+          pkgs.eww
+          pkgs.jq
+          pkgs.gawk
+          pkgs.findutils
+          pkgs.procps
+        ] { })
         (script "alert" [ pkgs.libnotify ] { })
         (script "hpc-wait" [ pkgs.libnotify pkgs.openssh ] { })
         (script "cheat" [ pkgs.bat pkgs.fzf ] { CHEATSHEETS = "${cheatsheets}"; })

@@ -36,6 +36,12 @@ nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
   for you to click the monitor to share. It works in Firefox, not in web apps.
 - **The brightness keys do nothing** (laptops): log out and in once after
   adding `laptop`, so your account joins the group allowed to change it.
+- **A monitor stays dark, overlaps another or has the wrong tags**: run
+  `monitors apply` in a terminal to lay them out again, and `monitors list`
+  to see what was found (name, scale, size). Text too big or too small on
+  one monitor: `Super + D` > *Scale of …*. When a projector shows nothing
+  in mirror mode, try *Presentation* instead: it doesn't need to copy the
+  screen.
 - **A window tiles but should float** (or the reverse): `Super + T` now;
   for always, see [Making it yours](11-making-it-yours.md#windows-that-should-float).
 

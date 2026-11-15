@@ -4,20 +4,37 @@ Everything lives in `~/.config/nixos`. After any change: `rebuild`, and
 `Super + Shift + R` for keys, rules and colours. New files need `git add`
 first.
 
-## You and your monitors: `settings.nix`
+## You: `settings.nix`
 
-Your name, email (used by git), the computer's name, and your monitors from
-left to right, each with its tags:
+Your name, email (used by git), the computer's name, your keyboard layout
+and how tags are shared out over your monitors.
+
+## Monitors
+
+Monitors need no names or sizes: they are found when plugged in and laid
+out left to right, the laptop's own screen first (`Super + D` swaps two
+external ones). `settings.nix` says which tags each one owns, the laptop's
+first, by how many are connected; any other number shares the ten tags out
+evenly, and tags left out go to the first monitor:
 
 ```nix
-monitors = [
-  { name = "DP-1";     width = 1920; height = 1080; tags = [ 1 2 3 4 5 ]; }
-  { name = "HDMI-A-1"; width = 1920; height = 1080; tags = [ 6 7 8 9 10 ]; primary = true; }
-];
+monitors = {
+  layouts = {
+    "1" = [ [ 1 2 3 4 5 6 7 8 9 10 ] ];
+    "2" = [ [ 1 2 3 4 5 ] [ 6 7 8 9 10 ] ];
+    "3" = [ [ 1 ] [ 2 3 4 5 ] [ 6 7 8 9 10 ] ];
+  };
+  presentation = [ [ 1 2 ] [ 3 4 5 6 7 8 ] ];   # Super+D > Presentation
+  scale = { "eDP-1" = 1.25; };                  # optional: fixed scales
+};
 ```
 
-On a laptop, one monitor with all ten tags is fine. The `primary` monitor
-shows the dashboard and gets focus at login.
+Scales are chosen from each monitor's pixel density unless `scale` fixes
+one, by connector (`eDP-1`, `DP-2`) or by `"make model serial"` as
+`wlr-randr` prints them (so a monitor keeps it on any port). A scale picked
+in `Super + D` wins over both. The menu's choices are kept in
+`~/.local/state/monitors/`; delete that folder to forget them. See
+[Navigation](03-navigation.md#monitors) for the layouts.
 
 ## Keyboard layout
 
@@ -41,8 +58,7 @@ Add `laptop` to both lists in `modules/hosts/nixos/default.nix`: the
 brightness keys, the battery and power mode in the System panel, power modes
 in *Super + Space > System* (performance, balanced, power-saver), and tap to
 click and natural scrolling on the touchpad. Closing the lid suspends, and
-the screen is locked when you open it. Your laptop's own screen goes in
-`settings.nix` like any monitor (usually `eDP-1`).
+the screen is locked when you open it.
 
 ## A new drive
 
@@ -127,7 +143,7 @@ home and says how to move each one.
 Every colour of the system comes from here, named after what it's for: `bg`,
 `text`, `accent`... Change `accent` and the window borders, the launcher's
 highlight, the prompt, the lock screen and the apps follow. The wallpaper
-(the EnjoyTheLab logo on the primary monitor, the bare gradient on the others),
+(the EnjoyTheLab logo on the first monitor, the bare gradient on the others),
 the lock screen (the logo, which the password ring circles while you type),
 the boot splash and fastfetch's logo are generated from the palette too. The
 logo is `modules/theme/_branding/wallpaper.svg` (logo and name) and `icon.svg`

@@ -19,12 +19,13 @@ in
       playerctl = "${pkgs.playerctl}/bin/playerctl";
 
       # Super+1..9,0 for tags 1-10; each tag acts on the monitor that owns it
+      # (which one depends on the monitors connected: scripts/monitors.sh)
       tagKeys = lib.listToAttrs (
         lib.concatMap (
           i:
           let
             key = toString (lib.mod i 10);
-            tag = action: spawn "tag ${action} ${toString (monitors.mask i)} ${(monitors.ownerOf i).name}";
+            tag = action: spawn "tag ${action} ${toString i}";
           in
           [
             (lib.nameValuePair "Super ${key}" (tag "focus")) # again: back to previous tag
@@ -156,6 +157,9 @@ in
             "Super Minus" = layout "gaps -2";
 
             # Monitors
+            # Layout (automatic, presentation, mirror), order and scale of the monitors
+            "Super D" = spawn "launcher monitors";
+            "None XF86Display" = spawn "launcher monitors";
             "Super Period" = "focus-output next";
             "Super Comma" = "focus-output previous";
             "Super+Shift Period" = "send-to-output next";

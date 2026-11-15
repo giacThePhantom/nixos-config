@@ -28,14 +28,6 @@ in
         "-app-id steam -title 'Friends List'"
         "-app-id steam -title 'Steam Settings'"
       ];
-
-      # Scratchpad terminal: 1400x800, centred on the primary monitor
-      scratch = {
-        w = 1400;
-        h = 800;
-        x = (monitors.primary.width - 1400) / 2;
-        y = (monitors.primary.height - 800) / 2;
-      };
     in
     {
       # Before autostart.nix, whose reload pass stops early
@@ -47,11 +39,13 @@ in
         # Scratchpad terminal (Super+`), on its hidden tag
         riverctl rule-add -app-id scratchpad float
         riverctl rule-add -app-id scratchpad tags ${toString monitors.scratchTag}
-        riverctl rule-add -app-id scratchpad dimensions ${toString scratch.w} ${toString scratch.h}
-        riverctl rule-add -app-id scratchpad position ${toString scratch.x} ${toString scratch.y}
+        # Its size and position, and the cheat sheets' size, depend on the first
+        # monitor and its scale: `monitors apply` sets them (scripts/monitors.sh)
 
-        # Cheat sheets from the launcher (scripts/cheat.sh): floating, readable size
-        riverctl rule-add -app-id cheatsheet dimensions 1100 900
+        # Mirror layout: wl-mirror windows on the hidden mirror tag (monitors.sh
+        # puts each on its monitor, by title)
+        riverctl rule-add -app-id at.yrlf.wl_mirror tags ${toString monitors.mirrorTag}
+        riverctl rule-add -app-id at.yrlf.wl_mirror fullscreen
       '';
     };
 }

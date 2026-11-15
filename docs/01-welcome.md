@@ -29,9 +29,11 @@ project.
 **One look.** One palette (`palette.nix`) colours everything: windows,
 terminal, launcher, apps, the login screen, the wallpaper and the boot splash.
 
-**Two monitors, ten workspaces.** Workspaces (called *tags*) 1 to 5 live on
-the left monitor, 6 to 10 on the right. `Super + 3` always takes you to the
-same place.
+**Any monitors, ten workspaces.** Workspaces (called *tags*) are shared out
+over the monitors you plug in: alone, the laptop has all ten; docked with
+two more, tag 1 is on the laptop, 2 to 5 and 6 to 10 on the others.
+`Super + 3` always takes you to tag 3, wherever it lives. `Super + D` switches
+to presentation or mirror mode and sets each monitor's scale.
 
 ## What you get
 

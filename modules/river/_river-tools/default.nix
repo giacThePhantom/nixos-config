@@ -4,6 +4,7 @@
 #   river-tags-watch  print each change of an output's focused tags
 #   river-awake   keep the screen awake until killed (wlinhibit and the like
 #                 use a surface river ignores: it wants one that is shown)
+#   river-outputs-watch  print a line whenever monitors are plugged or unplugged
 {
   lib,
   stdenv,
@@ -16,7 +17,7 @@
 }:
 stdenv.mkDerivation {
   pname = "river-tools";
-  version = "0.4";
+  version = "0.5";
   # Only the sources, so editing this file doesn't rebuild the tools
   src = lib.fileset.toSource {
     root = ./.;
@@ -40,6 +41,7 @@ stdenv.mkDerivation {
     protocol ${wayland-protocols}/share/wayland-protocols/unstable/idle-inhibit idle-inhibit-unstable-v1
     protocol ${wayland-protocols}/share/wayland-protocols/stable/xdg-shell xdg-shell
     protocol ${wlr-protocols}/share/wlr-protocols/unstable wlr-layer-shell-unstable-v1
+    protocol ${wlr-protocols}/share/wlr-protocols/unstable wlr-output-management-unstable-v1
     flags="-O2 -Wall $(pkg-config --cflags --libs wayland-client)"
     $CC -o river-output river-output.c river-status-unstable-v1-protocol.c $flags
     $CC -o river-tags-watch river-tags-watch.c river-status-unstable-v1-protocol.c $flags
@@ -48,7 +50,9 @@ stdenv.mkDerivation {
     # layer-shell's popups refer to xdg-shell's
     $CC -o river-awake river-awake.c idle-inhibit-unstable-v1-protocol.c \
       wlr-layer-shell-unstable-v1-protocol.c xdg-shell-protocol.c $flags
+    $CC -o river-outputs-watch river-outputs-watch.c \
+      wlr-output-management-unstable-v1-protocol.c $flags
   '';
 
-  installPhase = "install -Dm755 -t $out/bin river-output river-try river-tags-watch river-awake";
+  installPhase = "install -Dm755 -t $out/bin river-output river-try river-tags-watch river-awake river-outputs-watch";
 }

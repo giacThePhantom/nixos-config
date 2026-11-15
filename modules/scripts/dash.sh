@@ -1,6 +1,6 @@
 # dash open|toggle PANEL | dash close: the dashboard panels, eww windows
 # named hub (the menu), calendar, media, system and power. One is open at a
-# time, on the primary monitor. While one is open river is in "dashboard"
+# time, on the first monitor. While one is open river is in "dashboard"
 # mode (letters switch panels, Escape closes), and only that panel's polls run
 # (the eww variable `panel`). The eww daemon starts with the session
 # (river/autostart.nix); if it really is not running, this starts it.
@@ -24,11 +24,9 @@ open() {
   shown="$(current)"
   if [ -n "$shown" ]; then eww close "$shown" >/dev/null 2>&1 || true; fi
   eww update panel="$1"
-  # The primary monitor, or the first one if it's unplugged
-  screen=0
-  for status in /sys/class/drm/card*-"$PRIMARY_OUTPUT"/status; do
-    if [ "$(cat "$status" 2>/dev/null)" = connected ]; then screen="$PRIMARY_OUTPUT"; fi
-  done
+  # The first monitor (scripts/monitors.sh), or eww's first if none is known yet
+  screen="$(awk 'NR == 1 { print $1 }' "${XDG_RUNTIME_DIR:-/tmp}/monitors/layout" 2>/dev/null || true)"
+  screen="${screen:-0}"
   eww --no-daemonize open "$1" --screen "$screen" || true
   riverctl enter-mode dashboard
 }

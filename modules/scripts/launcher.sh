@@ -184,11 +184,49 @@ menu_setup() {
   add "Network" "Wi-Fi and connections (nmtui)" preferences-system-network "run:term nmtui"
   add "Bluetooth" "Pair and connect devices (bluetui)" preferences-system-bluetooth "run:term bluetui"
   add "Configuration" "Edit this system in Neovim" accessories-text-editor "run:term nvim $HOME/.config/nixos"
+  add "Monitors" "Layout, scale and order of the monitors (Super+D)" video-display cat:monitors
   add "Reload river" "Keys, rules and colours after a rebuild" view-refresh "run:river-reload"
   if command -v orca >/dev/null; then
     add "Screen reader" "Start Orca (quit: Orca+Q)" preferences-desktop-accessibility "run:orca --replace"
   fi
   show "Setup"
+}
+
+# Monitors (Super+D): the layout, each monitor's scale, their order
+# (scripts/monitors.sh does the work)
+menu_monitors() {
+  local mode name id scale how size auto ext=0 note
+  mode="$(monitors mode)"
+  now() { if [ "$mode" = "$1" ]; then printf ' · now'; fi; }
+  add "Automatic layout" "Tags shared out by number of monitors$(now auto)" video-display "run:monitors mode auto"
+  add "Presentation" "The laptop and a projector, tags split for talks$(now presentation)" \
+    x-office-presentation "run:monitors mode presentation"
+  add "Mirror" "Every monitor shows the first one$(now mirror)" cs-screen "run:monitors mode mirror"
+  while IFS=$'\t' read -r name id scale how size auto; do
+    case "$name" in eDP-* | LVDS-* | DSI-*) ;; *) ext=$((ext + 1)) ;; esac
+    note="automatic"
+    if [ "$how" = fixed ]; then note="chosen; automatic: $(percent "$auto")"; fi
+    add "Scale of $name: $(percent "$scale")" "$id · ${size} · $note" preferences-desktop-display "scale:$name"
+  done < <(monitors list)
+  if [ "$ext" -ge 2 ]; then
+    add "Swap external monitors" "If they are in the wrong order" view-refresh "run:monitors swap"
+  fi
+  show "Monitors"
+}
+
+percent() { awk -v s="$1" 'BEGIN { printf "%d%%", s * 100 + 0.5 }'; }
+
+# The scale of the monitor $scale_output
+menu_scale() {
+  local s auto
+  auto="$(monitors list | awk -F'\t' -v o="$scale_output" '$1 == o { print $6 }')"
+  add "Automatic" "From the pixel density: $(percent "${auto:-1}")" preferences-desktop-display \
+    "run:monitors scale $scale_output auto"
+  for s in 1 1.25 1.5 1.75 2 2.5 3; do
+    add "$(percent "$s")" "Everything on $scale_output at $(percent "$s") size" preferences-desktop-display \
+      "run:monitors scale $scale_output $s"
+  done
+  show "Scale of $scale_output"
 }
 
 menu_system() {
@@ -363,17 +401,19 @@ web_remove() {
   notify-send "Web app removed" "$slug"
 }
 
-menu="${1:-main}"
+menu="${1:-main}" start="$menu" scale_output=""
 while :; do
   N=() D=() I=() A=() choice=""
   if ! "menu_$menu"; then
-    # Esc: back to the main list, or close it
-    [ "$menu" = main ] && exit 0
+    # Esc: back to the menu it came from, or close it
+    if [ "$menu" = scale ]; then menu=monitors && continue; fi
+    [ "$menu" = main ] || [ "$menu" = "$start" ] && exit 0
     menu=main
     continue
   fi
   case "$choice" in
     cat:*) menu="${choice#cat:}" ;;
+    scale:*) scale_output="${choice#scale:}" menu=scale ;;
     app:*) launch "${choice#app:}" && exit 0 ;;
     run:*) riverctl spawn "${choice#run:}" && exit 0 ;;
     web:install) web_install && exit 0 ;;

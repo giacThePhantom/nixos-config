@@ -11,7 +11,7 @@ Find the right file, change it, then verify with the build-and-verify skill
 | Change | Where |
 | --- | --- |
 | User, email, hostname | `settings.nix` |
-| Monitors: names, sizes, order, tags | `settings.nix` → `monitors` (derived facts in `modules/flake/meta.nix`) |
+| Monitors: tags per layout, fixed scales | `settings.nix` → `monitors`; runtime logic in `modules/scripts/monitors.sh` |
 | Colours, fonts | `palette.nix` (repo root) |
 | GTK/cursor/icon theme | `modules/theme/gtk.nix` |
 | Wallpaper, boot splash | `modules/theme/_wallpaper.nix` (logo: `_branding/wallpaper.svg`), `modules/theme/boot.nix` (Plymouth) |
@@ -42,10 +42,14 @@ can still use real rgba (`$glass` etc. in `eww.scss`).
 
 ## Monitors and tags
 
-Each entry of `settings.monitors` (left to right) has `name` (connector,
-from `wlr-randr`), `width`, `height`, `tags` and optionally `primary = true`
-(startup focus, dashboard, scratchpad centring). Every tag 1-10 should belong
-to exactly one monitor. Positions are computed from widths.
+Monitors are detected at runtime: `modules/scripts/monitors.sh` (run by
+`monitors watch` on every hotplug) orders them (laptop panel first), sets
+positions and scales with wlr-randr, and writes which monitor owns which tag
+to `$XDG_RUNTIME_DIR/monitors/layout`, which `tag`, `tag-preview` and `dash`
+read. `settings.monitors` holds only data: `layouts` (tags per monitor, by
+number of monitors), `presentation`, and fixed `scale`s. Menu choices (scale,
+order) live in `~/.local/state/monitors/`. Nothing at build time may assume a
+monitor name or size.
 
 ## Keybindings
 

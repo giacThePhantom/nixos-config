@@ -1,6 +1,8 @@
 # Values every module can read from the flake-parts `config`: who you are and
-# your monitors (../../settings.nix), colours and fonts (../../palette.nix),
-# and facts derived from the monitors, shared by river and the scripts.
+# how monitors are laid out (../../settings.nix), colours and fonts
+# (../../palette.nix), and tag facts shared by river and the scripts. Which
+# monitor owns which tag is decided at runtime, as monitors come and go
+# (scripts/monitors.sh).
 { lib, config, ... }:
 let
   palette = import ../../palette.nix;
@@ -13,30 +15,18 @@ let
 in
 {
   options = {
-    settings = value "User, hostname and monitors" (import ../../settings.nix);
+    settings = value "User, hostname, keyboard and monitor layouts" (import ../../settings.nix);
     colors = value "Palette colours, hex without '#'" palette.colors;
     fonts = value "Font family names" palette.fonts;
-    monitors = value "Monitor layout derived from settings.monitors" (
-      let
-        # Place monitors left to right: each starts where the previous one ends
-        placed = lib.foldl (
-          acc: m: acc ++ [ (m // { x = lib.foldl (sum: p: sum + p.width) 0 acc; }) ]
-        ) [ ] config.settings.monitors;
-      in
-      rec {
-        all = placed;
-        primary = lib.findFirst (m: m.primary or false) (lib.last placed) placed;
+    monitors = value "Tag bitmasks" rec {
+      # Tag bitmask: tag i is bit i-1
+      mask = tag: lib.foldl (acc: _: acc * 2) 1 (lib.range 2 tag);
 
-        # Monitor that owns tag `tag` (1-10)
-        ownerOf = tag: lib.findFirst (m: lib.elem tag m.tags) primary placed;
-
-        # Tag bitmask: tag i is bit i-1
-        mask = tag: lib.foldl (acc: _: acc * 2) 1 (lib.range 2 tag);
-
-        # The scratchpad terminal lives on hidden tag 21; "all tags" excludes it
-        scratchTag = mask 21;
-        visibleTags = mask 33 - 1 - scratchTag;
-      }
-    );
+      # Hidden tags: the scratchpad terminal lives on 21, the mirror of the
+      # laptop screen (mirror layout) on 22. "All tags" excludes both.
+      scratchTag = mask 21;
+      mirrorTag = mask 22;
+      visibleTags = mask 33 - 1 - scratchTag - mirrorTag;
+    };
   };
 }

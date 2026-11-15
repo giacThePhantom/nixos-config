@@ -46,8 +46,9 @@ look under `.config/`. `.claude/skills/build-and-verify` has the details,
   outer module arguments (see README, Layout). Inside a NixOS/home module,
   `config` is that module's own config.
 - **No hardcoded identity or hardware** in modules: user, hostname and
-  monitors come from `settings.nix` (`config.settings`); monitor geometry and
-  tag ownership from `config.monitors` (`modules/flake/meta.nix`).
+  monitor layouts come from `settings.nix` (`config.settings`), tag bitmasks
+  from `config.monitors` (`modules/flake/meta.nix`). Monitor names, sizes and
+  tag ownership are only known at runtime (`modules/scripts/monitors.sh`).
 - **No hardcoded colours or fonts:** use `config.colors` / `config.fonts`
   (`palette.nix`), named after the theme's CSS variables. Note that
   `placeholder` is a Nix builtin, which is why the key is `textPlaceholder`;
@@ -79,6 +80,12 @@ look under `.config/`. `.claude/skills/build-and-verify` has the details,
   focuses its last window, not the moved one, unless the window is visible
   there (hence `-current-tags` and the retagging dance in `tag.sh`).
 - eww on Wayland needs an explicit monitor (`--screen NAME`).
+- Monitors come and go: `river-outputs-watch` (in `_river-tools`) prints a
+  line when heads are added or removed, not on mode/scale changes, so
+  `monitors apply` can reconfigure without retriggering itself. Processes it
+  starts in the background must not inherit its lock fd (`9>&-`). river has
+  no mirroring: mirror mode is a fullscreen wl-mirror per monitor, placed by
+  an `output` rule matched on its title.
 - Headless screenshots with the default pixman renderer draw translucent
   windows (foot at alpha 0.95) washed out; use the gles2 renderer.
 - rofi reads its theme only at runtime and shows an error box on a syntax

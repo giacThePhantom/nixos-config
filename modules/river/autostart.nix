@@ -1,5 +1,5 @@
 # What the river init does besides settings/keys/rules: on session start only,
-# start the session's programs, kanshi (monitor layout) first. They are plain
+# start the session's programs, the monitor layout first. They are plain
 # children of river (no systemd user services) and exit with it. The
 # Wayland environment reaches D-Bus/systemd, and river-session.target starts,
 # at the end of the init (wayland.windowManager.river.systemd, settings.nix).
@@ -8,7 +8,7 @@
 # session-start part.
 { config, ... }:
 let
-  inherit (config) colors fonts monitors;
+  inherit (config) colors fonts;
 in
 {
   flake.modules.homeManager.river =
@@ -22,38 +22,23 @@ in
       wallpaper = import ../theme/_wallpaper.nix { inherit pkgs colors fonts; };
       swaylock = "${pkgs.swaylock}/bin/swaylock -f";
       wlopm = "${pkgs.wlopm}/bin/wlopm";
-
-      # kanshi rather than a one-off wlr-randr: on resume from suspend the
-      # outputs are re-created and river places them in discovery order, so
-      # the layout must be re-applied whenever they appear. The profile needs
-      # every monitor connected; with fewer, positions don't matter.
-      kanshiConfig = ''
-        profile {
-        ${lib.concatMapStrings (m: "  output ${m.name} enable position ${toString m.x},0\n") monitors.all}}
-      '';
-
-      # Each monitor starts on its first tag; focus ends on the primary
-      startTags = lib.concatMapStringsSep "\n" (m: ''
-        riverctl focus-output ${m.name}
-        riverctl set-focused-tags ${toString (monitors.mask (lib.head m.tags))}
-      '') (lib.filter (m: m != monitors.primary) monitors.all ++ [ monitors.primary ]);
     in
     {
-      xdg.configFile."kanshi/config".text = kanshiConfig;
-
       wayland.windowManager.river.extraConfig = ''
-        # Apply a changed layout (a no-op until kanshi starts below)
-        ${pkgs.kanshi}/bin/kanshictl reload >/dev/null 2>&1 || true
+        # Lay the monitors out (again: layouts and scales may have changed).
+        # Each keeps or gets one of its own tags (scripts/monitors.sh).
+        monitors apply >/dev/null 2>&1 || true
 
         [ -n "$RIVER_RELOAD" ] && exit 0
 
         # ---- Session start only ----
-        ${pkgs.kanshi}/bin/kanshi & # monitor layout, now and after every change
-        ${startTags}
+        # Again whenever monitors are plugged in or out, and after a resume from
+        # suspend, which re-creates them
+        monitors watch &
         rivercarro -per-tag -inner-gaps 4 -outer-gaps 6 -main-ratio 0.55 &
-        # The logo on the primary monitor, the bare gradient on the others
+        # The logo on the first monitor, the bare gradient on the others
         ${pkgs.swaybg}/bin/swaybg -o '*' -m fill -c '#${c.bg}' -i ${wallpaper.plain} \
-          -o ${monitors.primary.name} -m fill -c '#${c.bg}' -i ${wallpaper.branded} &
+          -o "$(monitors primary)" -m fill -c '#${c.bg}' -i ${wallpaper.branded} &
         # Night light: warmer colours from 20:30 to 07:00, easier on the eyes late
         # (-t night, -T day temperature in kelvin; -s/-S sunset/sunrise)
         ${pkgs.wlsunset}/bin/wlsunset -t 4000 -T 6500 -s 20:30 -S 07:00 &

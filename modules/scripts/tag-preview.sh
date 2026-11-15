@@ -1,7 +1,8 @@
 # tag-preview: while you hold Super after pressing Super+N (any tag key), a
-# card on that monitor with all the tags of every monitor (settings.nix: 1-5
-# left, 6-10 right...) and what is open on each: app icons, a window title,
-# each monitor's active tag highlighted. Releasing Super hides it.
+# card on that monitor with all the tags of every monitor (which monitor owns
+# which depends on those connected: scripts/monitors.sh) and what is open on
+# each: app icons, a window title, each monitor's active tag highlighted.
+# Releasing Super hides it.
 #
 #   tag-preview                  the daemon, for the whole session (river/autostart.nix)
 #   tag-preview show OUTPUT T    show the card on OUTPUT, for a key pressed at T (µs; tag.sh)
@@ -12,8 +13,8 @@
 # can arrive first, and the card must not stay up. The card is eww's
 # `tagpreview` window (dashboard/eww/tagpreview.yuck); river reports tag
 # switches through river-tags-watch and windows through `riverctl list-views`
-# (a local patch). MONITOR_TAGS ("NAME=1,2,3 NAME=4,5", left to right) comes
-# from scripts/default.nix.
+# (a local patch). The monitors and their tags, left to right, are re-read
+# from monitors.sh's layout file at every event.
 
 state="${XDG_RUNTIME_DIR:-/tmp}/tag-preview"
 fifo="$state/requests"
@@ -41,18 +42,20 @@ mkfifo "$fifo"
 data="${XDG_DATA_HOME:-$HOME/.local/share}"
 icons="$state/icons" # "app id<TAB>icon name", lowercase ids
 
-# Per monitor: its tags as JSON, their bitmask, its focused tags
-declare -A owned mask focused
+# Per monitor: its tags as JSON, its focused tags; the monitors left to right
+declare -A owned focused
 order=()
-for entry in $MONITOR_TAGS; do
-  name="${entry%%=*}"
-  order+=("$name")
-  owned[$name]="[${entry#*=}]"
-  m=0
-  IFS=, read -ra list <<<"${entry#*=}"
-  for t in "${list[@]}"; do m=$((m | 1 << (t - 1))); done
-  mask[$name]=$m
-done
+layout="${XDG_RUNTIME_DIR:-/tmp}/monitors/layout" # "NAME 1,2,3" lines (scripts/monitors.sh)
+load_layout() {
+  local name tags
+  owned=() order=()
+  [ -r "$layout" ] || return 0
+  while read -r name tags; do
+    [ "$tags" = - ] && continue # a mirror: no tags of its own
+    order+=("$name")
+    owned[$name]="[$tags]"
+  done <"$layout"
+}
 shown=""  # the monitor the card is on, if it is up
 released=0 # when Super was last released (µs)
 
@@ -161,9 +164,9 @@ hide() {
   river-tags-watch | while read -r line; do printf 'tags %s\n' "$line"; done &
   while :; do cat "$fifo"; done
 } | while read -r kind a b _; do
+  load_layout # monitors come and go
   case "$kind" in
     tags) # a: output, b: its focused tags
-      [ -n "${mask[$a]:-}" ] || continue # a monitor not in settings.nix
       focused[$a]=$b
       # While the card is up (Super held), keep it current
       if [ -n "$shown" ]; then show "$shown" || true; fi

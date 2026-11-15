@@ -2,12 +2,13 @@
 
 ## Workspaces (tags)
 
-You have ten workspaces, called *tags*. Tags 1 to 5 belong to the left
-monitor and 6 to 10 to the right one (you can change the split in
-`settings.nix`). Each monitor shows one of its own tags at a time.
+You have ten workspaces, called *tags*, shared out over the monitors that are
+plugged in (see [Monitors](#monitors) below). Each monitor shows one of its
+own tags at a time.
 
-- `Super + 3` goes to tag 3, on the left monitor. `Super + 8` goes to tag 8,
-  on the right monitor, moving your focus there.
+- `Super + 3` goes to tag 3, on the monitor that owns it. With three
+  monitors, `Super + 8` goes to tag 8 on the rightmost one, moving your focus
+  there.
 - Press the same key again to go back to where you were.
 - `Super + Tab` jumps to the previously shown tags.
 
@@ -57,6 +58,38 @@ Each tag remembers its own layout.
 - `Super + Ctrl + K / J` puts more or fewer windows in the master area.
 - `Super + Arrow` puts the master area on that side.
 - `Super + = / -` makes the gaps between windows bigger or smaller.
+
+## Monitors
+
+Plug a monitor in or out and the desktop lays itself out again: the laptop's
+own screen on the left, the others to its right. Which tags each monitor
+owns depends on how many there are (`settings.nix` can change it):
+
+| Monitors | Laptop | Second | Third |
+| --- | --- | --- | --- |
+| 1 | tags 1-10 | | |
+| 2 | 1-5 | 6-10 | |
+| 3 | 1 | 2-5 | 6-10 |
+
+Windows go with their tag: unplug a monitor and its windows appear on the
+monitors that now own their tags; plug it back and they return.
+
+`Super + D` (or the laptop's display key) opens the *Monitors* menu:
+
+- **Automatic layout**: the table above.
+- **Presentation**: tags 1-2 (and 9-10) on the laptop, 3-8 on the
+  projector. Keep your notes on the laptop and show tags 3-8.
+- **Mirror**: every monitor shows the laptop's screen, for a projector when
+  you want the audience to see exactly what you see.
+- **Scale of …**: how big everything is on that monitor (100%, 125%, 150%...).
+  Out of the box it is chosen from the monitor's pixel density, so text is
+  readable on the laptop and not huge on a large external screen. A scale
+  you pick is remembered for that monitor, wherever you plug it.
+- **Swap external monitors**: when two external monitors are in the wrong
+  order (`Super + L` should go to the one on the right).
+
+Presentation and mirror last as long as those monitors stay connected; the
+next time a different set is plugged in, the layout goes back to automatic.
 
 ## The scratchpad
 

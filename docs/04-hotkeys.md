@@ -86,6 +86,7 @@ configuration.
 | `Super + Shift + Tab` | show all tags of this monitor at once |
 | `Super + ,` / `Super + .` | focus the previous / next monitor |
 | `Super + Shift + ,` / `Super + Shift + .` | send the window to the previous / next monitor |
+| `Super + D`, display key | monitors: automatic, presentation or mirror layout, scale of each, order |
 | `Super + F11` | passthrough: every key goes to the window (VMs, games); again to leave |
 
 ## Accessibility (optional `accessibility` feature)

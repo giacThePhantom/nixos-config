@@ -19,9 +19,9 @@ minutes.
    cp /etc/nixos/hardware-configuration.nix modules/hosts/nixos/_hardware-configuration.nix
    ```
 4. Make it yours: edit `settings.nix`. Your login name, full name, email,
-   the computer's name, your keyboard layout (`us`, `it`, `de`...), and your
-   monitors from left to right (their names: `ls /sys/class/drm`, e.g.
-   `card1-DP-1` is `DP-1`; a laptop's own screen is usually `eDP-1`).
+   the computer's name and your keyboard layout (`us`, `it`, `de`...). Monitors
+   are found by themselves; `settings.nix` says how tags are shared out
+   over them (see [Making it yours](11-making-it-yours.md#monitors)).
 5. Tell it what your machine has, in `modules/hosts/nixos/default.nix`:
    remove `nvidia` if you have no NVIDIA graphics card, and `storage` (it
    mounts the author's extra drives; see `modules/hardware/storage.nix` to

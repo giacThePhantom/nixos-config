@@ -38,9 +38,13 @@ The rest of this page is for people changing the configuration itself.
   environment, and no systemd *user* session for the desktop: river's init
   script starts the session programs as its own children and they exit with
   it.
-- **Per-monitor tags.** Tags 1-5 live on the left monitor, 6-10 on the right
-  (`settings.nix`). `Super+N` jumps to the monitor that owns tag N; switching
-  shows, while Super is held, a preview of all tags and their windows.
+- **Per-monitor tags, any monitors.** Tags are shared out over the monitors
+  plugged in, by how many there are (`settings.nix`: the laptop alone has
+  1-10; docked with two more, 1 | 2-5 | 6-10), and windows follow their tag
+  when monitors come and go. `Super+N` jumps to the monitor that owns tag N;
+  switching shows, while Super is held, a preview of all tags and their
+  windows. `Super+D`: presentation and mirror layouts, scale per monitor
+  (automatic from the pixel density). `scripts/monitors.sh` does it all.
 - **Vim keys across monitors.** `Super+H/J/K/L` focus and `Super+Shift+H/J/K/L`
   move windows, continuing onto the next monitor at the screen edge.
 - **One palette.** `palette.nix` holds every colour and font; the wallpapers
@@ -55,7 +59,8 @@ A few small things are not stock:
   protocols. `river-output` prints the focused monitor; `river-try` runs
   river commands until one of them works (e.g. "focus left, else the monitor
   to the left"); `river-tags-watch` reports each tag switch, for the tag
-  preview. Nothing in nixpkgs does these reliably.
+  preview; `river-outputs-watch` reports monitors being plugged in or out,
+  for `monitors`. Nothing in nixpkgs does these reliably.
 - `modules/river/_patches/`: three patches to river.
   `river-swap-report-no-target.patch` makes `swap` report failure when there
   is nothing to swap with (upstream it silently does nothing), so moving a
@@ -78,7 +83,7 @@ system part to `flake.modules.nixos.NAME` and its user part to
 `NAME` (`river/` has five). The host then lists the features it runs.
 
 ```
-settings.nix              who you are, hostname, monitors and their tags  <- edit me
+settings.nix              who you are, hostname, how tags go on monitors  <- edit me
 palette.nix               every colour and font                           <- edit me
 flake.nix                 inputs only; outputs = everything in modules/
 modules/
@@ -95,7 +100,7 @@ modules/
                           _wallpaper.nix, _branding/ (logo SVG, splash script)
   river/                  session.nix (river patched, greetd login), settings.nix
                           (look, input), keys.nix, rules.nix, autostart.nix,
-                          _river-tools/ (river-output, river-try, river-tags-watch), _patches/
+                          _river-tools/ (river-output, river-try, river-tags-watch...), _patches/
   dashboard/eww/          dashboard panels: eww.yuck + one .yuck/.scss per panel,
                           and the tag preview (tagpreview.yuck)
   scripts/                helper commands (*.sh), installed on PATH; _cheatsheets/
@@ -155,7 +160,7 @@ also needs adding to the lists in `modules/hosts/nixos/default.nix`.
 | Firefox | not themed yet: keeps the theme chosen in Firefox |
 | renCal, Spotify (Spicetify) | `modules/theme/apps.nix` |
 | mpv, imv, zathura | `modules/apps.nix` |
-| Wallpapers (logo on the primary monitor), lock screen and fastfetch logos | `modules/theme/_wallpaper.nix` (generated from `_branding/wallpaper.svg` and `icon.svg`) |
+| Wallpapers (logo on the first monitor), lock screen and fastfetch logos | `modules/theme/_wallpaper.nix` (generated from `_branding/wallpaper.svg` and `icon.svg`) |
 | Boot splash | `modules/theme/boot.nix` (Plymouth) |
 | TTYs and the login screen | `modules/theme/console.nix`, `modules/river/session.nix` |
 

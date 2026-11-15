@@ -22,16 +22,29 @@
     options = ""; # e.g. "caps:escape" (Caps Lock as a second Escape)
   };
 
-  # Monitors from left to right, by connector name (`wlr-randr` lists them).
-  # Each owns a set of tags: Super+N jumps to the monitor that owns tag N
-  # (tag 10 is on key 0). The primary monitor gets focus at login and shows
-  # the dashboard.
-  monitors = [
-    {
-      name = "eDP-1";
-      width = 1920;
-      height = 1080;
-      tags = [ 1 2 3 4 5 ];
-    }
-  ];
+  # Monitors are found as they are plugged in, and laid out left to right:
+  # the laptop's own screen first, then the others (swap them from
+  # Super+D). Each owns some tags: Super+N jumps to the monitor that owns
+  # tag N (tag 10 is on key 0). Tags no monitor owns go to the first one,
+  # which also shows the dashboard. Super+D switches the layout (automatic,
+  # presentation, mirror) and each monitor's scale.
+  monitors = {
+    # Automatic layout, by number of monitors; with any other number the
+    # tags are shared out evenly
+    layouts = {
+      "1" = [ [ 1 2 3 4 5 6 7 8 9 10 ] ];
+      "2" = [ [ 1 2 3 4 5 ] [ 6 7 8 9 10 ] ];
+      "3" = [ [ 1 ] [ 2 3 4 5 ] [ 6 7 8 9 10 ] ];
+    };
+
+    # Presentation: the laptop and the projector (tags 9-10 stay on the laptop)
+    presentation = [ [ 1 2 ] [ 3 4 5 6 7 8 ] ];
+
+    # Fixed scales (1 = 100%, 1.5 = 150%...), by connector or by
+    # "make model serial" (both from `wlr-randr`). The others are chosen from
+    # the pixel density, or picked in Super+D, which wins over these.
+    scale = {
+      # "eDP-1" = 1.25;
+    };
+  };
 }
