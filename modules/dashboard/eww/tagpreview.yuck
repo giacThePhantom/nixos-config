@@ -7,7 +7,9 @@
 
 (defwindow tagpreview :monitor 0 :geometry (geometry :anchor "center")
   :stacking "overlay" :exclusive false :focusable "none" :namespace "tagpreview"
-  (box :class "tagpreview" :spacing 14
+  ;; Not evenly spaced: monitors own different numbers of tags, and equal
+  ;; widths would stretch the tiles of the one with fewer
+  (box :class "tagpreview" :spacing 14 :space-evenly false
     (for monitor in tagpreview
       (box :class "tag-monitor ${monitor.here ? 'here' : ''}" :orientation "v"
            :space-evenly false :spacing 8

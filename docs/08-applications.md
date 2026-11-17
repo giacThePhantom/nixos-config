@@ -38,7 +38,7 @@ use. To add one, put its name in the list in `modules/hosts/nixos/default.nix`
 | `igv` | IGV, the genome browser | +640 MiB |
 | `pymol` | PyMOL, protein structures | +300 MiB |
 | `inkscape` | Inkscape, to finish figures and posters (SVG, PDF) | +500 MiB |
-| `containers` | Podman (Docker images, `docker` works) and Apptainer (your cluster's images), on your computer (this one goes in the first list, `nixos`) | +510 MiB |
+| `containers` | Podman (Docker images; `docker` and `docker compose` work) and Apptainer (your cluster's images), on your computer (this one goes in the first list, `nixos`) | +580 MiB |
 | `backup` | nightly encrypted backups of your documents and projects (see [Research tools](09-research.md#backups)) | small |
 | `syncthing` | keep folders in sync between your computers, no cloud | +30 MiB |
 | `sioyek` | a PDF viewer made for papers, which becomes the default for PDFs (see [Research tools](09-research.md#reading-papers)) | +300 MiB |

@@ -28,8 +28,10 @@ in
       cluster
       clean-home
       laptop
+      home-row-mods # hold A S D F / J K L ; for Super Alt Ctrl Shift
       # On a laptop add: laptop (both lists)
       # Opt-in (extras/): containers (Podman + Apptainer, +510 MiB),
+      containers
       # accessibility (screen reader, magnifier; both lists, +760 MiB)
     ]);
 
@@ -54,6 +56,9 @@ in
       writing
       clean-home
       laptop
+      office
+      sioyek
+      inkscape
       # Opt-in (extras/), with what each adds: office (OnlyOffice, +1.3 GiB) OR
       # libreoffice (+1.7 GiB, for Zotero's official plugin), igv (+640 MiB),
       # pymol (+300 MiB), inkscape (+500 MiB), backup (nightly restic, see

@@ -116,7 +116,7 @@ cluster that runs Apptainer:
 `apptainer build bio-project.sif docker-archive://result`.
 
 **Running containers here.** Docker images (Podman, rootless, no daemon;
-`docker` works too) and Apptainer images from BioContainers or nf-core need
+`docker` and `docker compose` work too) and Apptainer images from BioContainers or nf-core need
 the optional `containers` feature (see
 [Applications](08-applications.md#optional-apps)). Building an image with
 `nix build` needs nothing extra.

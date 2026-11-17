@@ -4,6 +4,9 @@
 *Super + Space > Keybindings* has the same list, searchable, read from the live
 configuration.
 
+With home row mods (on by default), holding `A S D F` or `J K L ;` also gives
+`Super Alt Ctrl Shift`: see [Making it yours](11-making-it-yours.md#home-row-mods).
+
 ## Apps
 
 | Keys | What |

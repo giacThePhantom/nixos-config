@@ -93,7 +93,8 @@ modules/
   base.nix                boot, network, locale, sound, the user, Nix
   home.nix                home-manager inside the system build; git, identity
   hardware/               nvidia.nix (driver, VA-API, CUDA cache), storage.nix (drives),
-                          bluetooth.nix, laptop.nix (brightness, power modes, touchpad)
+                          bluetooth.nix, laptop.nix (brightness, power modes, touchpad),
+                          home-row-mods.nix (kanata: modifiers on the home row)
   gaming.nix              Steam, Lutris, GameMode
   theme/                  console.nix (TTYs), gtk.nix (GTK/cursor/fonts),
                           apps.nix (renCal, Spotify), boot.nix (Plymouth splash),

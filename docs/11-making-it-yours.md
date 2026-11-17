@@ -52,6 +52,24 @@ It applies to the desktop and to the text screens, including the login
 screen. Names of layouts, variants and options:
 `localectl list-x11-keymap-layouts` (and `…-variants it`, `…-options`).
 
+## Home row mods
+
+The `home-row-mods` feature (`modules/hardware/home-row-mods.nix`, on every
+keyboard) turns the home row into modifiers when held: `A S D F` are
+`Super Alt Ctrl Shift`, mirrored on `J K L ;`. Tapped, they type their letter.
+
+- Use the modifier of one hand with a key of the other: hold `;` and press
+  `B` for Firefox, hold `D` and press `L` for `Ctrl + L`.
+- With a key of the same hand, or space and the digits, hold a little longer
+  (200 ms): hold `A`, wait, press `3`.
+- Right after typing another key it is always the letter, so fast typing
+  never fires a modifier. Pause briefly before a shortcut.
+- The real `Super`, `Alt`, `Ctrl` and `Shift` keys still work.
+
+It works the same on the text screens. Drop `home-row-mods` from
+`modules/hosts/nixos/default.nix` to turn it off; the timing is the `hold`
+value in its file.
+
 ## Laptops
 
 Add `laptop` to both lists in `modules/hosts/nixos/default.nix`: the
@@ -112,7 +130,8 @@ rmdir ~/Desktop ~/Public ~/Templates        # unused here; rmdir only removes em
 
 (`~/.cargo` is Rust's download cache: it is downloaded again when needed.)
 
-renCal's calendars (`~/caldir`): close renCal, then
+renCal's calendars (`~/caldir`): new setups keep them in
+`~/.local/share/caldir`; an older one moves once. Close renCal, then
 
 ```sh
 mv ~/caldir ~/.local/share/caldir

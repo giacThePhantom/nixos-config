@@ -21,7 +21,7 @@ in
     let
       river-tools = pkgs.callPackage ../river/_river-tools { };
 
-      # The caldir CLI that reads renCal's calendars (~/caldir), without the
+      # The caldir CLI that reads renCal's calendars (~/.local/share/caldir), without the
       # sync providers renCal already has (15 MB instead of 104 MB)
       caldir =
         let

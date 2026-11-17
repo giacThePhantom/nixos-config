@@ -50,6 +50,24 @@ in
         fi
       '';
 
+      # The calendars themselves: caldir's default is ~/caldir, with no
+      # environment variable to move it, and renCal rewrites this file too
+      # (keeping lines it doesn't know). Point it into XDG data when nothing
+      # would be lost: no config yet, or the default with no ~/caldir to move
+      # (docs/11-making-it-yours.md has the one-time move).
+      home.activation.caldirDataDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        config="''${XDG_CONFIG_HOME:-$HOME/.config}/caldir/config.toml"
+        line='calendar_dir = "~/.local/share/caldir"'
+        if [ ! -e "$config" ]; then
+          run mkdir -p "$(dirname "$config")"
+          run sh -c 'printf "%s\n" "$2" > "$1"' _ "$config" "$line"
+        elif [ ! -e "$HOME/caldir" ] && ! grep -q '^calendar_dir' "$config"; then
+          run sh -c 'printf "%s\n" "$2" >> "$1"' _ "$config" "$line"
+        elif [ ! -e "$HOME/caldir" ] && grep -q '^calendar_dir = "~/caldir"' "$config"; then
+          run sed -i "s|^calendar_dir = .*|$line|" "$config"
+        fi
+      '';
+
       # Spotify, patched by Spicetify with a colour scheme from the palette
       programs.spicetify = {
         enable = true;

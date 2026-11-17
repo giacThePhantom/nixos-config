@@ -74,13 +74,15 @@ Data that needs real logic goes in a script (`dash-agenda`, `dash-media` in
 `modules/scripts/`) that prints JSON for a `defpoll`. Commands started from a
 panel go through `dash-run CMD ARGS`, which closes the panel and spawns CMD
 under river. The calendar reads renCal's events with the caldir CLI from
-`~/caldir`; `rencal://event?uid=…` links open an event in renCal.
+`~/.local/share/caldir` (its `calendar_dir`); `rencal://event?uid=…` links
+open an event in renCal.
 
 Icons are Nerd Font glyphs: prefer U+F0000+ (Material Design), check they
 exist in "Symbols Nerd Font", and insert them with `printf '\U000F00ED'` or
 ASCII placeholders replaced afterwards if your editor drops them. Test with
 the headless-river skill: `tools/headless-river run dash open NAME`, then
-`shot`; give it a fake `HOME` with a sample `~/caldir` rather than real data.
+`shot`; give it a fake `HOME` with a sample `~/.config/caldir/config.toml`
+and calendars rather than real data.
 
 ## Re-enabling Qt theming
 
