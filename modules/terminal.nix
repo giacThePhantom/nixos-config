@@ -106,6 +106,7 @@ in
           la = "eza -la --icons --git --group-directories-first";
           tree = "eza --tree --icons";
           cat = "bat --paging=never";
+          vim = "nvim";
           rebuild = "sudo nixos-rebuild switch --flake ~/.config/nixos#nixos";
         };
       };

@@ -27,7 +27,7 @@ in
         };
         libraries.papers = {
           isDefault = true;
-          settings.dir = "~/Documents/papers";
+          settings.dir = "~/Documents/Papers";
         };
       };
 

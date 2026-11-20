@@ -26,8 +26,7 @@
             (left  q w e r t a s d f g z x c v b)
             (right y u i o p h j k l ; n m , . /))
 
-          (defsrc a s d f j k l ;)
-
+          (defsrc a s d f j k l ; caps)
           ;; ms a key waits for the other hand before it is its modifier anyway.
           ;; -release: the other key must also be released, so overlapping
           ;; keystrokes of fast typing stay letters. Keys of no hand (space,
@@ -44,9 +43,11 @@
             j (t! hrm j rsft)
             k (t! hrm k rctl)
             l (t! hrm l ralt)
-            ; (t! hrm ; rmet))
+            ; (t! hrm ; rmet)
+            cap-esc esc
+            )
 
-          (deflayer base @a @s @d @f @j @k @l @;)
+          (deflayer base @a @s @d @f @j @k @l @; @cap-esc)
         '';
       };
     };
