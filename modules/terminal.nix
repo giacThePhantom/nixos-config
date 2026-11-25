@@ -12,35 +12,14 @@ in
     let
       c = colors;
 
-      # zellij's bar (zjstatus): session and tabs on the left, the mode only
-      # when it isn't locked, i.e. while a leader command is under way.
-      # Every layout below shares it.
+      # zellij's bar: its built-in compact-bar (session, tabs, mode), drawn by
+      # zellij itself. zjstatus, used before, blinked and covered the bottom
+      # line of the pane above. Every layout below shares it.
       zellijBar = ''
         default_tab_template {
             children
             pane size=1 borderless=true {
-                plugin location="zjstatus" {
-                    format_left  "#[fg=#${c.accentLight},bold] {session} {tabs}"
-                    format_right "{mode}"
-                    format_space ""
-                    border_enabled "false"
-                    hide_frame_for_single_pane "false"
-
-                    mode_locked       ""
-                    mode_tmux         "#[bg=#${c.accent},fg=#${c.text},bold] LEADER "
-                    mode_resize       "#[bg=#${c.warning},fg=#${c.bg},bold] RESIZE  hjkl grow, HJKL shrink, Esc "
-                    mode_scroll       "#[bg=#${c.info},fg=#${c.bg},bold] SCROLL  / search, e edit, Esc "
-                    mode_enter_search "#[bg=#${c.info},fg=#${c.bg},bold] SEARCH "
-                    mode_search       "#[bg=#${c.info},fg=#${c.bg},bold] SEARCH  n next, N previous, Esc "
-                    mode_rename_tab   "#[bg=#${c.success},fg=#${c.bg},bold] TAB NAME  Enter, Esc "
-                    mode_rename_pane  "#[bg=#${c.success},fg=#${c.bg},bold] PANE NAME  Enter, Esc "
-
-                    tab_normal   "#[fg=#${c.textMuted}] {index} {name} "
-                    tab_active   "#[bg=#${c.bgSecondary},fg=#${c.text},bold] {index} {name} {sync_indicator}{fullscreen_indicator}{floating_indicator}"
-                    tab_sync_indicator       "TYPING IN ALL PANES "
-                    tab_fullscreen_indicator "zoomed "
-                    tab_floating_indicator   "floating "
-                }
+                plugin location="compact-bar"
             }
         }
       '';
@@ -207,10 +186,9 @@ in
       programs.zellij = {
         enable = true;
         enableBashIntegration = false; # would start it in every shell
-        # Linked to ~/.config/zellij/plugins, so the permissions they ask for
-        # once survive updates (a /nix/store path would ask again each time)
+        # Linked to ~/.config/zellij/plugins, so the permission it asks for
+        # once survives updates (a /nix/store path would ask again each time)
         plugins = with pkgs.zellijPlugins; [
-          zjstatus # the bar
           vim-zellij-navigator # Ctrl+H/J/K/L across Neovim and panes
         ];
         settings = {

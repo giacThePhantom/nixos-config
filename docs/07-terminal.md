@@ -111,13 +111,12 @@ next pane. (In the shell this takes `Ctrl + L`: type `clear` instead.)
 Neovim's half is [zellij-nav.nvim](https://github.com/swaits/zellij-nav.nvim),
 in your Neovim configuration (`~/.config/nvim/lua/plugins/zellij-nav.lua`).
 
-The bar at the bottom shows the session's name and its tabs; on the right,
-the mode while a leader command is under way (`LEADER`, `RESIZE`,
-`SCROLL`...), with its keys.
+The bar at the bottom (zellij's own) shows the session's name, its tabs
+and the current mode (`TMUX` while a leader command is under way).
 
-The first time zellij starts, its two plugins (the bar and the `Ctrl + H/J/K/L`
-helper) each ask for permission in a small window: press `y` in each. They
-remember it, also across updates.
+The first time zellij starts, the `Ctrl + H/J/K/L` helper asks for
+permission in a small window: press `y`. It remembers it, also across
+updates.
 
 Ready-made layouts, from a project folder:
 
@@ -154,7 +153,7 @@ How it's set up (`programs.zellij` in `modules/terminal.nix`, which writes
   after every leader command: that is what makes `Ctrl + Space` a leader,
   like tmux's prefix, instead of zellij's default of many `Ctrl` shortcuts
   that clash with programs inside;
-- a bar with the session and its tabs (zjstatus), no frames around panes, no tips at start;
+- a bar with the session and its tabs (zellij's compact bar), no frames around panes, no tips at start;
 - colours from the palette, like the terminal;
 - it only starts when asked: plain terminals stay plain.
 

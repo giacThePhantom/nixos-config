@@ -53,6 +53,8 @@ in
         # (scripts/zoom.sh), which sets Zoom up for screen sharing; the menu
         # entry runs `zoom` too.
         (lib.lowPrio pkgs.zoom-us)
+        # Telegram, the official Qt 6 client (Qt 6 is already in the system)
+        pkgs.telegram-desktop
         # Spotify comes from programs.spicetify (theme/apps.nix)
       ];
 

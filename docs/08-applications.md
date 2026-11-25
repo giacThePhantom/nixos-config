@@ -8,6 +8,7 @@
 | Betterbird | email, also university and Gmail accounts (a fine-tuned Thunderbird) | launcher; email links |
 | renCal | calendar (Google, Microsoft, CalDAV) | launcher; events also in `Super + C` |
 | Spotify | music, in the system's colours | `Super + Shift + M` |
+| Telegram | chat, [in the system's colours](#telegram) | launcher; `Telegram` |
 | mpv | video and audio files | opening a file |
 | imv | images | opening a file |
 | zathura | PDFs, with dark pages (`Ctrl + R`: original colours; `J/K` scroll, `/` search) | opening a file |
@@ -24,6 +25,15 @@ Betterbird keeps your mail and settings in `~/.config/thunderbird` (back
 that folder up to keep them) and comes with the system's updates, not its
 own. A Google account (your university one included) needs only its
 address: Betterbird recognises it and opens Google's own sign-in window.
+
+## Telegram
+
+Telegram ignores the desktop's theme and keeps its own choice in its
+encrypted data, so a theme in the system's colours is ready for it but has to
+be picked once: *Settings > Chat Settings*, the `⋮` menu, *Load from file*,
+then `~/.config/telegram/system.tdesktop-theme` (in the file picker,
+`Ctrl + L` lets you paste the path). After changing the palette and
+`rebuild`ing, load it again.
 
 ## Optional apps
 
